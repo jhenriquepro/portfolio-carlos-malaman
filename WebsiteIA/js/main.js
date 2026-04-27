@@ -316,9 +316,9 @@ document.addEventListener('DOMContentLoaded', () => {
      * 4. Copie sua Public Key (Account > API Keys)
      * 5. Substitua os valores abaixo:
      */
-    const EMAILJS_PUBLIC_KEY  = 'Slyd4UqRoUvkZ8YZdX';
-    const EMAILJS_SERVICE_ID  = 'template_b2i7xhl';
-    const EMAILJS_TEMPLATE_ID = 'SEU_TEMPLATE_ID_AQUI';
+    const EMAILJS_PUBLIC_KEY  = 'lyd4UqRoUvkZ8YZdX';
+    const EMAILJS_SERVICE_ID  = 'service_tyf7b3i';
+    const EMAILJS_TEMPLATE_ID = 'template_b2i7xhl';
     const DESTINO_EMAIL       = 'malamancontato@gmail.com';
 
     // Inicializa EmailJS
@@ -399,11 +399,19 @@ document.addEventListener('DOMContentLoaded', () => {
 
         btnEnviar.classList.add('enviando');
 
+        const agora = new Date();
+        const horaFormatada = agora.toLocaleString('pt-BR', {
+            day: '2-digit', month: '2-digit', year: 'numeric',
+            hour: '2-digit', minute: '2-digit'
+        });
+
         const templateParams = {
-            to_email:     DESTINO_EMAIL,
-            from_email:   camposSimples.email.el.value.trim(),
-            subject:      camposSimples.assunto.el.value.trim(),
-            message_html: editorBody ? editorBody.innerHTML : '',
+            to_email: DESTINO_EMAIL,
+            name:     camposSimples.email.el.value.trim(),
+            email:    camposSimples.email.el.value.trim(),
+            title:    camposSimples.assunto.el.value.trim(),
+            message:  editorBody ? editorBody.innerText : '',
+            time:     horaFormatada,
         };
 
         try {
@@ -411,9 +419,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 await emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, templateParams);
             } else {
                 // Fallback: abre cliente de e-mail nativo com mailto
-                const assunto = encodeURIComponent(templateParams.subject);
+                const assunto = encodeURIComponent(templateParams.title);
                 const corpo   = encodeURIComponent(
-                    `De: ${templateParams.from_email}\n\n${editorBody ? editorBody.innerText : ''}`
+                    `De: ${templateParams.email}\n\n${templateParams.message}`
                 );
                 window.location.href = `mailto:${DESTINO_EMAIL}?subject=${assunto}&body=${corpo}`;
             }
