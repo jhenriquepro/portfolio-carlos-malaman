@@ -464,4 +464,133 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
+/* ----------------------------------------
+       8. SISTEMA DE TRADUÇÃO (EN / PT)
+    ---------------------------------------- */
+    const dictionary = {
+        en: {
+            "a[href='#apresentacao'].cabecalho__menu__link": "Home",
+            "a[href='#portfolio'].cabecalho__menu__link": "Portfolio",
+            "a[href='#shorts'].cabecalho__menu__link": "Shorts",
+            "a[href='#contatos'].cabecalho__menu__link": "Contact",
+            ".hero__tag": "✦ Video Editor",
+            ".hero__titulo": "Elevate your content<br><span class=\"destaque\">to another level.</span>",
+            ".hero__acoes a[href='#portfolio']": "View Portfolio",
+            ".hero__acoes a[href='#shorts']": "View Shorts",
+            ".hero__acoes a[href='#contatos']": "Contact Me",
+            ".stats__item:nth-child(1) .stats__label": "Delivered projects",
+            ".stats__item:nth-child(3) .stats__label": "Years of experience",
+            ".stats__item:nth-child(5) .stats__label": "Satisfied clients",
+            ".portfolio__header .section__tag": "✦ My Work",
+            ".portfolio__header .section__titulo": "Portfolio",
+            ".portfolio__header .section__subtitulo": "A selection of my best editing projects.",
+            ".shorts__header .section__tag": "✦ Shorts & Reels",
+            ".shorts__header .section__titulo": "View Shorts",
+            ".shorts__header .section__subtitulo": "Fast edits, dynamic cuts, and great pacing.",
+            ".contatos__esquerda .section__tag": "✦ Let's Talk",
+            ".contatos__esquerda .section__titulo": "Get in<br>Touch",
+            ".contatos__descricao": "Ready to take your content to the next level? Send me a message and let's create something amazing together.",
+            "label[for='email-usuario']": "Your E-mail",
+            "label[for='assunto-usuario']": "Subject",
+            ".form__grupo:nth-child(3) .form__label": "Message",
+            "#btn-enviar .btn__texto": "Send Message",
+            "#btn-enviar .btn__check": "✓ Sent!",
+            ".editor__anexo__btn": `<svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> Attach file`,
+            ".rodape__texto": "<span class=\"rodape__marca\">Carlos Malaman</span> — Video Editor",
+            ".rodape__dev": "Developed by JHENRIQUEDEV"
+        },
+        pt: {
+            "a[href='#apresentacao'].cabecalho__menu__link": "Início",
+            "a[href='#portfolio'].cabecalho__menu__link": "Portfólio",
+            "a[href='#shorts'].cabecalho__menu__link": "Shorts",
+            "a[href='#contatos'].cabecalho__menu__link": "Contatos",
+            ".hero__tag": "✦ Editor de Vídeos",
+            ".hero__titulo": "Eleve seu conteúdo<br><span class=\"destaque\">a outro nível.</span>",
+            ".hero__acoes a[href='#portfolio']": "Ver Portfólio",
+            ".hero__acoes a[href='#shorts']": "Ver Shorts",
+            ".hero__acoes a[href='#contatos']": "Fale Comigo",
+            ".stats__item:nth-child(1) .stats__label": "Projetos entregues",
+            ".stats__item:nth-child(3) .stats__label": "Anos de experiência",
+            ".stats__item:nth-child(5) .stats__label": "Clientes satisfeitos",
+            ".portfolio__header .section__tag": "✦ Meus Trabalhos",
+            ".portfolio__header .section__titulo": "Portfólio",
+            ".portfolio__header .section__subtitulo": "Uma seleção dos meus melhores projetos de edição.",
+            ".shorts__header .section__tag": "✦ Shorts & Reels",
+            ".shorts__header .section__titulo": "Ver Shorts",
+            ".shorts__header .section__subtitulo": "Edições rápidas, cortes dinâmicos e muito ritmo.",
+            ".contatos__esquerda .section__tag": "✦ Vamos Conversar",
+            ".contatos__esquerda .section__titulo": "Entre em<br>Contato",
+            ".contatos__descricao": "Pronto para levar seu conteúdo ao próximo nível? Me envie uma mensagem e vamos criar algo incrível juntos.",
+            "label[for='email-usuario']": "Seu E-mail",
+            "label[for='assunto-usuario']": "Assunto",
+            ".form__grupo:nth-child(3) .form__label": "Mensagem",
+            "#btn-enviar .btn__texto": "Enviar Mensagem",
+            "#btn-enviar .btn__check": "✓ Enviado!",
+            ".editor__anexo__btn": `<svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg> Anexar arquivo`,
+            ".rodape__texto": "<span class=\"rodape__marca\">Carlos Malaman</span> — Editor de Vídeos",
+            ".rodape__dev": "Desenvolvido por JHENRIQUEDEV"
+        }
+    };
+
+    const placeholders = {
+        en: {
+            "#email-usuario": "example@gmail.com",
+            "#assunto-usuario": "I want to hire your services.",
+            "#editor-body": "Hello Carlos, I would like to..."
+        },
+        pt: {
+            "#email-usuario": "exemplo@gmail.com",
+            "#assunto-usuario": "Quero contratar seus serviços.",
+            "#editor-body": "Olá Carlos, gostaria de..."
+        }
+    };
+
+    let currentLang = 'en'; // Define Inglês como padrão
+
+    function setLanguage(lang) {
+        currentLang = lang;
+        document.documentElement.lang = lang === 'en' ? 'en' : 'pt-br';
+        document.title = lang === 'en' ? 'Carlos Malaman — Video Editor' : 'Carlos Malaman — Editor de Vídeos';
+
+        // Atualiza textos
+        for (const selector in dictionary[lang]) {
+            const el = document.querySelector(selector);
+            if (el) el.innerHTML = dictionary[lang][selector];
+        }
+
+        // Atualiza placeholders
+        for (const selector in placeholders[lang]) {
+            const el = document.querySelector(selector);
+            if (el) {
+                if (el.tagName === 'INPUT') {
+                    el.placeholder = placeholders[lang][selector];
+                } else {
+                    el.setAttribute('data-placeholder', placeholders[lang][selector]);
+                }
+            }
+        }
+
+        // Atualiza botão de idioma (mostra a opção inversa para o usuário clicar)
+        const btn = document.getElementById('btn-lang');
+        if (btn) btn.textContent = lang === 'en' ? 'PT' : 'EN';
+        
+        // Atualiza mensagens de erro do formulário (que já existiam no seu código original)
+        if(typeof mensagensErro !== 'undefined') {
+            mensagensErro.email.vazio = lang === 'en' ? 'Enter your e-mail.' : 'Informe seu e-mail.';
+            mensagensErro.email.invalido = lang === 'en' ? 'Invalid e-mail.' : 'E-mail inválido.';
+            mensagensErro.assunto.vazio = lang === 'en' ? 'Enter a subject.' : 'Informe o assunto.';
+        }
+    }
+
+    // Aplica o inglês imediatamente ao carregar a página
+    setLanguage('en');
+
+    // Evento de clique para alternar
+    const btnLangToggle = document.getElementById('btn-lang');
+    if (btnLangToggle) {
+        btnLangToggle.addEventListener('click', () => {
+            setLanguage(currentLang === 'en' ? 'pt' : 'en');
+        });
+    }
+
 });
