@@ -597,6 +597,8 @@ document.addEventListener('DOMContentLoaded', () => {
             origCards.forEach(card => {
                 const clone = card.cloneNode(true);
                 clone.setAttribute('aria-hidden', 'true');
+                // Garante lazy loading nos iframes clonados
+                clone.querySelectorAll('iframe').forEach(f => f.setAttribute('loading', 'lazy'));
                 fita.appendChild(clone);
             });
 
@@ -613,13 +615,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 return w;
             };
 
-            let offset = 0;        // posição atual em px
+            // Para direção esquerda, iniciamos no começo do set original (offset 0).
+            // Para direção direita, também offset 0 — ambas funcionam corretamente
+            // porque o wrap infinito acontece nos dois sentidos.
+            let offset = 0;
             let lastTime = null;
             let paused = false;
             let isDragging = false;
             let dragStartX = 0;
             let dragStartOffset = 0;
-            let velocity = 0;      // arrastado pelo usuário
             let returnRAF = null;
 
             const loop = (ts) => {
@@ -632,15 +636,28 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const setW = getSetW();
-                // Wrap infinito
-                if (direction === 1 && offset > setW) offset -= setW;
-                if (direction === -1 && offset < -setW) offset += setW;
+                // Wrap infinito — mantém offset dentro de [-setW, setW]
+                if (offset > setW)  offset -= setW;
+                if (offset < -setW) offset += setW;
 
                 fita.style.transform = `translateX(${-offset}px)`;
                 requestAnimationFrame(loop);
             };
 
-            requestAnimationFrame(loop);
+            // Para a linha que vai para a esquerda (direction=-1), offset começa em 0
+            // mas a fita se move para valores negativos, trazendo os clones do final
+            // para a viewport — para evitar espaço vazio no início, começamos
+            // o offset negativo pela metade do set clonado (posição neutra visível).
+            if (direction === -1) {
+                // Aguarda layout ser calculado antes de definir o offset inicial
+                requestAnimationFrame(() => {
+                    const setW = getSetW();
+                    offset = -setW; // começa exibindo os clones (que são cópias dos originais)
+                    requestAnimationFrame(loop);
+                });
+            } else {
+                requestAnimationFrame(loop);
+            }
 
             // ── HOVER pause/resume ──
             row.addEventListener('mouseenter', () => { paused = true; });
@@ -698,6 +715,9 @@ document.addEventListener('DOMContentLoaded', () => {
     })();
 
 
+
+    // Aplica inglês imediatamente ao carregar a página
+    setLanguage('en');
 
     // Evento de clique para alternar
     const btnLangToggle = document.getElementById('btn-lang');
