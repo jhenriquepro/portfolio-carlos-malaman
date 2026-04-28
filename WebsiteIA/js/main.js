@@ -22,74 +22,57 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     /* ----------------------------------------
-       1b. SCROLL NAV — sobe/desce flutuante
+       1b. SCROLL NAV — dois botões prev/next (desktop)
     ---------------------------------------- */
-    const scrollNav = document.getElementById('scroll-nav');
-
-    // Seções na ordem da página para navegação sequencial
     const secoes = ['#apresentacao', '#portfolio', '#shorts', '#contatos'];
+    const scrollPrev = document.getElementById('scroll-prev');
+    const scrollNext = document.getElementById('scroll-next');
+
+    const getHeaderH = () =>
+        parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'), 10) || 64;
 
     const getSecaoAtual = () => {
-        const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'), 10) || 64;
         const meio = window.scrollY + window.innerHeight / 2;
         let atual = 0;
         secoes.forEach((sel, i) => {
             const el = document.querySelector(sel);
-            if (el && el.getBoundingClientRect().top + window.scrollY <= meio) {
-                atual = i;
-            }
+            if (el && el.getBoundingClientRect().top + window.scrollY <= meio) atual = i;
         });
         return atual;
     };
 
-    const atualizarScrollNav = () => {
-        if (!scrollNav) return;
-        const idx = getSecaoAtual();
-        const naInicial = window.scrollY < 80;
-        // Esconde se estiver na última seção E próximo ao fundo
-        const noFundo = (window.scrollY + window.innerHeight) >= document.body.scrollHeight - 80;
-
-        if (noFundo && idx === secoes.length - 1) {
-            scrollNav.style.opacity = '0';
-            scrollNav.style.pointerEvents = 'none';
-        } else {
-            scrollNav.style.opacity = '';
-            scrollNav.style.pointerEvents = '';
-        }
-
-        // Modo: na inicial → só desce. Em qualquer outro ponto → sobe.
-        if (naInicial) {
-            scrollNav.classList.remove('up');
-        } else {
-            scrollNav.classList.add('up');
+    const scrollParaSecao = (idx) => {
+        const alvo = document.querySelector(secoes[Math.max(0, Math.min(secoes.length - 1, idx))]);
+        if (alvo) {
+            const RESPIRO = 0; // scroll-margin-top nas seções já cuida do offset
+            const y = alvo.getBoundingClientRect().top + window.scrollY - getHeaderH() - RESPIRO;
+            window.scrollTo({ top: y, behavior: 'smooth' });
         }
     };
 
-    if (scrollNav) {
-        scrollNav.addEventListener('click', () => {
-            const headerH = parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'), 10) || 64;
-            const idx = getSecaoAtual();
-            const naInicial = window.scrollY < 80;
+    const atualizarScrollNav = () => {
+        const idx = getSecaoAtual();
+        if (scrollPrev) {
+            idx > 0 ? scrollPrev.classList.add('visivel') : scrollPrev.classList.remove('visivel');
+        }
+        if (scrollNext) {
+            idx < secoes.length - 1 ? scrollNext.classList.add('visivel') : scrollNext.classList.remove('visivel');
+        }
+    };
 
-            let alvoSel;
-            if (naInicial) {
-                // Desce para a próxima seção
-                alvoSel = secoes[Math.min(idx + 1, secoes.length - 1)];
-            } else {
-                // Sobe para o topo
-                alvoSel = secoes[0];
-            }
+    if (scrollPrev) scrollPrev.addEventListener('click', () => scrollParaSecao(getSecaoAtual() - 1));
+    if (scrollNext) scrollNext.addEventListener('click', () => scrollParaSecao(getSecaoAtual() + 1));
 
-            const alvo = document.querySelector(alvoSel);
-            if (alvo) {
-                const y = alvo.getBoundingClientRect().top + window.scrollY - headerH;
-                window.scrollTo({ top: y, behavior: 'smooth' });
-            }
+    // Mobile back-to-top button
+    const btnTopoMobile = document.getElementById('btn-topo-mobile');
+    if (btnTopoMobile) {
+        btnTopoMobile.addEventListener('click', () => {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         });
-
-        window.addEventListener('scroll', atualizarScrollNav, { passive: true });
-        atualizarScrollNav();
     }
+
+    window.addEventListener('scroll', atualizarScrollNav, { passive: true });
+    atualizarScrollNav();
 
 
     /* ----------------------------------------
@@ -474,7 +457,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "a[href='#shorts'].cabecalho__menu__link": "Shorts",
             "a[href='#contatos'].cabecalho__menu__link": "Contact",
             ".hero__tag": "✦ Video Editor",
-            ".hero__titulo": "Elevate your content<br><span class=\"destaque\">to another level.</span>",
+            ".hero__titulo": "Hi, I'm<br><span class=\"destaque\">Carlos Malaman</span>",
+            ".hero__subtitulo": "Bringing your videos to life.",
             ".hero__acoes a[href='#portfolio']": "View Portfolio",
             ".hero__acoes a[href='#shorts']": "View Shorts",
             ".hero__acoes a[href='#contatos']": "Contact Me",
@@ -505,7 +489,8 @@ document.addEventListener('DOMContentLoaded', () => {
             "a[href='#shorts'].cabecalho__menu__link": "Shorts",
             "a[href='#contatos'].cabecalho__menu__link": "Contatos",
             ".hero__tag": "✦ Editor de Vídeos",
-            ".hero__titulo": "Eleve seu conteúdo<br><span class=\"destaque\">a outro nível.</span>",
+            ".hero__titulo": "Olá, eu sou<br><span class=\"destaque\">Carlos Malaman</span>",
+            ".hero__subtitulo": "Dando vida aos seus vídeos.",
             ".hero__acoes a[href='#portfolio']": "Ver Portfólio",
             ".hero__acoes a[href='#shorts']": "Ver Shorts",
             ".hero__acoes a[href='#contatos']": "Fale Comigo",
@@ -545,7 +530,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    let currentLang = 'en'; // Define Inglês como padrão
+    let currentLang = 'en'; // Inglês como padrão
 
     function setLanguage(lang) {
         currentLang = lang;
@@ -570,9 +555,18 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Atualiza botão de idioma (mostra a opção inversa para o usuário clicar)
+        // Atualiza botão de idioma — troca a bandeira visível
         const btn = document.getElementById('btn-lang');
-        if (btn) btn.textContent = lang === 'en' ? 'PT' : 'EN';
+        if (btn) {
+            const flagPt = btn.querySelector('.btn__lang__flag--pt');
+            const flagEn = btn.querySelector('.btn__lang__flag--en');
+            if (flagPt && flagEn) {
+                // Mostra a bandeira do idioma ATUAL (indicativo do idioma em uso)
+                flagPt.style.display = lang === 'pt' ? 'block' : 'none';
+                flagEn.style.display = lang === 'en' ? 'block' : 'none';
+            }
+            btn.title = lang === 'en' ? 'Mudar para Português' : 'Switch to English';
+        }
         
         // Atualiza mensagens de erro do formulário (que já existiam no seu código original)
         if(typeof mensagensErro !== 'undefined') {
@@ -582,8 +576,128 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Aplica o inglês imediatamente ao carregar a página
-    setLanguage('en');
+
+
+    /* ----------------------------------------
+       9. SHORTS CARROSSEL — loop infinito + drag/touch
+    ---------------------------------------- */
+    (function initCarrosseis() {
+        const rows = document.querySelectorAll('.shorts__carrossel');
+
+        rows.forEach(row => {
+            const fita = row.querySelector('.shorts__fita');
+            if (!fita) return;
+
+            const direction = row.dataset.direction === 'right' ? 1 : -1;
+            // px/segundo de velocidade base
+            const SPEED = 60;
+
+            // Clona os cards para loop infinito
+            const origCards = Array.from(fita.children);
+            origCards.forEach(card => {
+                const clone = card.cloneNode(true);
+                clone.setAttribute('aria-hidden', 'true');
+                fita.appendChild(clone);
+            });
+
+            // Calcula largura total de um set original
+            const getSetW = () => {
+                let w = 0;
+                origCards.forEach(c => {
+                    const style = getComputedStyle(c);
+                    w += c.offsetWidth + parseFloat(style.marginRight || 0) + parseFloat(style.marginLeft || 0);
+                });
+                // também soma o gap (pegamos via fita)
+                const gap = parseFloat(getComputedStyle(fita).gap) || 16;
+                w += gap * origCards.length;
+                return w;
+            };
+
+            let offset = 0;        // posição atual em px
+            let lastTime = null;
+            let paused = false;
+            let isDragging = false;
+            let dragStartX = 0;
+            let dragStartOffset = 0;
+            let velocity = 0;      // arrastado pelo usuário
+            let returnRAF = null;
+
+            const loop = (ts) => {
+                if (lastTime === null) lastTime = ts;
+                const dt = (ts - lastTime) / 1000; // segundos
+                lastTime = ts;
+
+                if (!paused && !isDragging) {
+                    offset += direction * SPEED * dt;
+                }
+
+                const setW = getSetW();
+                // Wrap infinito
+                if (direction === 1 && offset > setW) offset -= setW;
+                if (direction === -1 && offset < -setW) offset += setW;
+
+                fita.style.transform = `translateX(${-offset}px)`;
+                requestAnimationFrame(loop);
+            };
+
+            requestAnimationFrame(loop);
+
+            // ── HOVER pause/resume ──
+            row.addEventListener('mouseenter', () => { paused = true; });
+            row.addEventListener('mouseleave', () => {
+                if (!isDragging) paused = false;
+            });
+
+            // ── MOUSE drag ──
+            row.addEventListener('mousedown', (e) => {
+                isDragging = true;
+                paused = true;
+                dragStartX = e.clientX;
+                dragStartOffset = offset;
+                row.classList.add('dragging');
+                if (returnRAF) { cancelAnimationFrame(returnRAF); returnRAF = null; }
+            });
+
+            window.addEventListener('mousemove', (e) => {
+                if (!isDragging) return;
+                const dx = dragStartX - e.clientX; // positivo = arrastou esquerda
+                offset = dragStartOffset + dx;
+            });
+
+            window.addEventListener('mouseup', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                row.classList.remove('dragging');
+                // Retorna ao eixo natural suavemente (volta a andar)
+                paused = false;
+                lastTime = null; // reseta dt para evitar salto
+            });
+
+            // ── TOUCH drag ──
+            row.addEventListener('touchstart', (e) => {
+                isDragging = true;
+                paused = true;
+                dragStartX = e.touches[0].clientX;
+                dragStartOffset = offset;
+                if (returnRAF) { cancelAnimationFrame(returnRAF); returnRAF = null; }
+            }, { passive: true });
+
+            row.addEventListener('touchmove', (e) => {
+                if (!isDragging) return;
+                const dx = dragStartX - e.touches[0].clientX;
+                offset = dragStartOffset + dx;
+            }, { passive: true });
+
+            row.addEventListener('touchend', () => {
+                if (!isDragging) return;
+                isDragging = false;
+                paused = false;
+                lastTime = null;
+            });
+        });
+    })();
+
+
 
     // Evento de clique para alternar
     const btnLangToggle = document.getElementById('btn-lang');

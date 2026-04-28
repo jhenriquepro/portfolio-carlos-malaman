@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="pt-br">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,7 +7,7 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="estilos/style.css">
-    <title>Carlos Malaman — Editor de Vídeos</title>
+    <title>Carlos Malaman — Video Editor</title>
 </head>
 <body>
 
@@ -19,7 +19,10 @@
             <a class="cabecalho__menu__link" href="#portfolio">Portfólio</a>
             <a class="cabecalho__menu__link" href="#shorts">Shorts</a>
             <a class="cabecalho__menu__link" href="#contatos">Contatos</a>
-            <button class="btn__lang" id="btn-lang" title="Mudar Idioma">PT</button>
+            <button class="btn__lang" id="btn-lang" title="Switch to English" aria-label="Trocar idioma">
+                <img class="btn__lang__flag btn__lang__flag--pt" src="assets2/BRA-Flag.png" alt="Português" width="26" height="26">
+                <img class="btn__lang__flag btn__lang__flag--en" src="assets2/USA-Flag.png" alt="English" width="26" height="26" style="display:none">
+            </button>
         </nav>
         <button class="hamburguer" id="hamburguer" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu">
             <span></span>
@@ -47,12 +50,10 @@
                 <div class="hero__conteudo">
                     <p class="hero__tag reveal reveal--delay-1">✦ Editor de Vídeos</p>
                     <h1 class="hero__titulo reveal reveal--delay-2">
-                        Eleve seu conteúdo<br>
-                        <span class="destaque">a outro nível.</span>
+                        Olá, eu sou<br>
+                        <span class="destaque">Carlos Malaman</span>
                     </h1>
-                    <!-- <p class="hero__texto reveal reveal--delay-3">
-                        Olá! Sou <strong>Carlos Malaman</strong>, editor de vídeos e criador do canal <span class="canal">MalamanOficial</span>. Transformo ideias em vídeos dinâmicos com cortes estratégicos, ritmo envolvente e identidade própria.
-                    </p> -->
+                    <p class="hero__subtitulo reveal reveal--delay-3">Dando vida aos seus vídeos.</p>
 
                     <div class="hero__acoes reveal reveal--delay-4">
                         <a class="btn btn--primario" href="#portfolio">Ver Portfólio</a>
@@ -61,37 +62,73 @@
                     </div>
 
                     <div class="hero__redes reveal reveal--delay-5">
-                        <a class="rede__link" href="https://discord.com/invite/yGyrfG3A" target="_blank" aria-label="Discord">
-                            <img src="assets2/discordia.png" alt="">
+                        <a class="rede__link rede--discord" href="https://discord.com/invite/yGyrfG3A" target="_blank" aria-label="Discord">
+                            <img src="https://cdn.simpleicons.org/discord/ffffff" alt="Discord" loading="lazy">
                         </a>
-                        <a class="rede__link" href="https://www.youtube.com/@MalamanOficial" target="_blank" aria-label="YouTube">
-                            <img src="assets2/youtube.png" alt="">
+                        <a class="rede__link rede--youtube" href="https://www.youtube.com/@MalamanOficial" target="_blank" aria-label="YouTube">
+                            <img src="https://cdn.simpleicons.org/youtube/ffffff" alt="YouTube" loading="lazy">
                         </a>
-                        <a class="rede__link" href="https://x.com/MalamanOficial" target="_blank" aria-label="X / Twitter">
-                            <img src="assets2/x.png" alt="">
+                        <a class="rede__link rede--x" href="https://x.com/MalamanOficial" target="_blank" aria-label="X / Twitter">
+                            <img src="https://cdn.simpleicons.org/x/ffffff" alt="X" loading="lazy">
                         </a>
-                        <a class="rede__link" href="https://www.tiktok.com/@malamanoficial" target="_blank" aria-label="TikTok">
-                            <img src="assets2/tiktok.png" alt="">
+                        <a class="rede__link rede--tiktok" href="https://www.tiktok.com/@malamanoficial" target="_blank" aria-label="TikTok">
+                            <img src="https://cdn.simpleicons.org/tiktok/ffffff" alt="TikTok" loading="lazy">
                         </a>
-                        <a class="rede__link" href="https://www.instagram.com/carlos_malaman" target="_blank" aria-label="Instagram">
-                            <img src="assets2/instagram.png" alt="">
+                        <a class="rede__link rede--instagram" href="https://www.instagram.com/carlos_malaman" target="_blank" aria-label="Instagram">
+                            <img src="https://cdn.simpleicons.org/instagram/ffffff" alt="Instagram" loading="lazy">
+                        </a>
+                        <a class="rede__link rede--email" href="mailto:malamancontato@gmail.com" aria-label="Email">
+                            <img src="https://cdn.simpleicons.org/gmail/ffffff" alt="Email" loading="lazy">
+                        </a>
+                        <a class="rede__link rede--whatsapp" href="https://wa.me/SEU_NUMERO_AQUI" target="_blank" aria-label="WhatsApp">
+                            <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="WhatsApp" loading="lazy">
                         </a>
                     </div>
                 </div>
             </div>
 
-            <button class="scroll__nav" id="scroll-nav" aria-label="Navegar pela página">
-                <span class="scroll__nav__texto"></span>
-                <span class="scroll__nav__icone">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <!-- Dual scroll navigation (desktop only) -->
+            <div class="scroll__nav__wrapper" id="scroll-nav-wrapper">
+                <button class="scroll__nav__btn" id="scroll-prev" aria-label="Seção anterior">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="18 15 12 9 6 15"></polyline>
+                    </svg>
+                </button>
+                <button class="scroll__nav__btn" id="scroll-next" aria-label="Próxima seção">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
-                </span>
-            </button>
+                </button>
+            </div>
+
+            <!-- STACK — visível na tela inicial -->
+            <div class="ferramentas hero__ferramentas">
+                <div class="ferramentas__inner">
+                    <span class="ferramentas__rotulo">Stack</span>
+                    <div class="ferramentas__lista">
+                        <div class="ferramenta__item" title="Adobe Premiere Pro">
+                            <img src="assets2/Premiere-pro.png" alt="Premiere Pro" loading="lazy">
+                            <span>Premiere</span>
+                        </div>
+                        <div class="ferramenta__item" title="Adobe After Effects">
+                            <img src="assets2/After-Effects.png" alt="After Effects" loading="lazy">
+                            <span>After Effects</span>
+                        </div>
+                        <div class="ferramenta__item" title="Adobe Photoshop">
+                            <img src="assets2/Photoshop.png" alt="Photoshop" loading="lazy">
+                            <span>Photoshop</span>
+                        </div>
+                        <div class="ferramenta__item" title="Frame.io">
+                            <img src="assets2/Frame-io.png" alt="Frame.io" loading="lazy">
+                            <span>Frame.io</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </section>
 
         <!-- STATS BAR -->
-        <div class="stats">
+        <!-- <div class="stats">
             <div class="stats__item">
                 <span class="stats__num">50+</span>
                 <span class="stats__label">Projetos entregues</span>
@@ -106,7 +143,7 @@
                 <span class="stats__num">100%</span>
                 <span class="stats__label">Clientes satisfeitos</span>
             </div>
-        </div>
+        </div> -->
 
         <!-- PORTFOLIO -->
         <section id="portfolio" class="portfolio">
@@ -187,45 +224,111 @@
                 <p class="section__subtitulo">Edições rápidas, cortes dinâmicos e muito ritmo.</p>
             </div>
 
-            <div class="shorts__grade">
-                <div class="short__card reveal">
-                    <div class="short__wrapper">
-                        <iframe class="short__iframe" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <!-- CARROSSEL — Linha de cima: rola para a DIREITA -->
+            <div class="shorts__carrossel" id="shorts-row-top" data-direction="right">
+                <div class="shorts__fita">
+                    <!-- Cards originais -->
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Short</span>
+                            <h3 class="short__titulo">Nintendo</h3>
+                        </div>
                     </div>
-                    <div class="short__info">
-                        <span class="short__tag">Short</span>
-                        <h3 class="short__titulo">Nintendo</h3>
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/OfmHx47i78s" title="Porque as batalhas de Undertale SÃO EM PRETO E BRANCO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Short</span>
+                            <h3 class="short__titulo">Undertale</h3>
+                        </div>
                     </div>
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Short</span>
+                            <h3 class="short__titulo">Terraria</h3>
+                        </div>
+                    </div>
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/xV9-_jfmkJM" title="O Modchip que SALVOU O PLAYSTATION 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Reel</span>
+                            <h3 class="short__titulo">Playstation 2</h3>
+                        </div>
+                    </div>
+                    <!-- +1 card extra (Terraria repetido) para volume visual -->
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Short</span>
+                            <h3 class="short__titulo">Terraria</h3>
+                        </div>
+                    </div>
+                    <!-- Clones para loop infinito (duplicados via JS) -->
                 </div>
+            </div>
 
-                <div class="short__card reveal reveal--delay-1">
-                    <div class="short__wrapper">
-                        <iframe class="short__iframe" src="https://www.youtube.com/embed/OfmHx47i78s" title="Porque as batalhas de Undertale SÃO EM PRETO E BRANCO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            <!-- CARROSSEL — Linha de baixo: rola para a ESQUERDA -->
+            <div class="shorts__carrossel" id="shorts-row-bottom" data-direction="left">
+                <div class="shorts__fita">
+                    <!-- Cards originais -->
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/xV9-_jfmkJM" title="O Modchip que SALVOU O PLAYSTATION 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Reel</span>
+                            <h3 class="short__titulo">Playstation 2</h3>
+                        </div>
                     </div>
-                    <div class="short__info">
-                        <span class="short__tag">Short</span>
-                        <h3 class="short__titulo">Undertale</h3>
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Short</span>
+                            <h3 class="short__titulo">Nintendo</h3>
+                        </div>
                     </div>
-                </div>
-
-                <div class="short__card reveal reveal--delay-2">
-                    <div class="short__wrapper">
-                        <iframe class="short__iframe" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/OfmHx47i78s" title="Porque as batalhas de Undertale SÃO EM PRETO E BRANCO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Short</span>
+                            <h3 class="short__titulo">Undertale</h3>
+                        </div>
                     </div>
-                    <div class="short__info">
-                        <span class="short__tag">Short</span>
-                        <h3 class="short__titulo">Terraria</h3>
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Short</span>
+                            <h3 class="short__titulo">Terraria</h3>
+                        </div>
                     </div>
-                </div>
-
-                <div class="short__card reveal reveal--delay-3">
-                    <div class="short__wrapper">
-                        <iframe class="short__iframe" src="https://www.youtube.com/embed/xV9-_jfmkJM" title="O Modchip que SALVOU O PLAYSTATION 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                    <!-- +1 card extra (Nintendo repetido) para volume visual -->
+                    <div class="short__card">
+                        <div class="short__wrapper">
+                            <iframe class="short__iframe" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        </div>
+                        <div class="short__info">
+                            <span class="short__tag">Short</span>
+                            <h3 class="short__titulo">Nintendo</h3>
+                        </div>
                     </div>
-                    <div class="short__info">
-                        <span class="short__tag">Reel</span>
-                        <h3 class="short__titulo">Playstation 2</h3>
-                    </div>
+                    <!-- Clones para loop infinito (duplicados via JS) -->
                 </div>
             </div>
         </section>
@@ -236,22 +339,39 @@
     <section id="contatos" class="contatos">
         <div class="contatos__inner">
             <div class="contatos__esquerda reveal">
-                <p class="section__tag">✦ Vamos Conversar</p>
-                <h2 class="section__titulo">Entre em<br>Contato</h2>
+                <div class="contatos__cabecalho">
+                    <div>
+                        <p class="section__tag">✦ Vamos Conversar</p>
+                        <h2 class="section__titulo">Entre em<br>Contato</h2>
+                    </div>
+                    <div class="contatos__foto">
+                        <img src="assets/perfil_gostoso.png" alt="Carlos Malaman" class="contatos__img">
+                        <div class="contatos__foto__ring"></div>
+                    </div>
+                </div>
+
                 <p class="contatos__descricao">Pronto para levar seu conteúdo ao próximo nível? Me envie uma mensagem e vamos criar algo incrível juntos.</p>
 
                 <div class="contatos__redes">
                     <a class="contatos__rede" href="https://discord.com/invite/yGyrfG3A" target="_blank">
-                        <img src="assets2/discordia.png" alt="" class="contatos__rede__icone">
+                        <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
                         <span>Discord</span>
                     </a>
                     <a class="contatos__rede" href="https://x.com/MalamanOficial" target="_blank">
-                        <img src="assets2/x.png" alt="" class="contatos__rede__icone">
+                        <img src="https://cdn.simpleicons.org/x/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
                         <span>Twitter</span>
                     </a>
                     <a class="contatos__rede" href="https://www.instagram.com/carlos_malaman" target="_blank">
-                        <img src="assets2/instagram.png" alt="" class="contatos__rede__icone">
+                        <img src="https://cdn.simpleicons.org/instagram/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
                         <span>Instagram</span>
+                    </a>
+                    <a class="contatos__rede" href="mailto:malamancontato@gmail.com">
+                        <img src="https://cdn.simpleicons.org/gmail/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
+                        <span>Email</span>
+                    </a>
+                    <a class="contatos__rede" href="https://wa.me/SEU_NUMERO_AQUI" target="_blank">
+                        <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
+                        <span>WhatsApp</span>
                     </a>
                 </div>
             </div>
@@ -334,10 +454,14 @@
     </section>
 
     <footer class="rodape">
+        <button class="rodape__topo--mobile" id="btn-topo-mobile" aria-label="Voltar ao topo">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="18 15 12 9 6 15"></polyline></svg>
+            Voltar ao topo
+        </button>
         <p class="rodape__texto">
             <span class="rodape__marca">Carlos Malaman</span> — Editor de Vídeos
         </p>
-        <p class="rodape__dev">Desenvolvido por JHENRIQUEDEV</p>
+        <p class="rodape__dev">Desenvolvido por <a href="https://www.instagram.com/jhenrique_dev" target="_blank" class="rodape__dev__link">JHENRIQUEDEV</a></p>
     </footer>
 
     <!-- OVERLAY DO MENU MOBILE -->
