@@ -602,33 +602,38 @@ document.addEventListener('DOMContentLoaded', () => {
                 fita.appendChild(clone);
             });
 
-            // Calcula largura total de um set original
+            // Calcula largura total de um set original (os N cards originais + gaps)
             const getSetW = () => {
-                let w = 0;
-                origCards.forEach(c => {
-                    const style = getComputedStyle(c);
-                    w += c.offsetWidth + parseFloat(style.marginRight || 0) + parseFloat(style.marginLeft || 0);
-                });
-                // também soma o gap (pegamos via fita)
                 const gap = parseFloat(getComputedStyle(fita).gap) || 16;
-                w += gap * origCards.length;
+                let w = 0;
+                origCards.forEach(c => { w += c.offsetWidth; });
+                w += gap * origCards.length; // gap após cada card (incluindo o último — folga aceitável)
                 return w;
             };
 
-            // Para direção esquerda, iniciamos no começo do set original (offset 0).
-            // Para direção direita, também offset 0 — ambas funcionam corretamente
-            // porque o wrap infinito acontece nos dois sentidos.
+            // offset representa "quanto a fita foi deslocada para a esquerda".
+            // translateX(-offset) → offset positivo = fita vai pra esquerda (direção normal →→)
+            //                       offset negativo = fita vai pra direita (←←)
+            //
+            // Estratégia de loop infinito (funciona para ambas as direções):
+            //   - A fita tem: [originais | clones]
+            //   - offset válido fica sempre em [0, setW)
+            //   - direction=+1 (→): offset cresce → wrap: quando passa de setW, volta a 0
+            //   - direction=-1 (←): offset decresce → wrap: quando fica negativo, salta para setW
+            //
+            // Dessa forma os cards visíveis são SEMPRE os originais ou clones adjacentes,
+            // nunca um espaço vazio.
+
             let offset = 0;
             let lastTime = null;
             let paused = false;
             let isDragging = false;
             let dragStartX = 0;
             let dragStartOffset = 0;
-            let returnRAF = null;
 
             const loop = (ts) => {
                 if (lastTime === null) lastTime = ts;
-                const dt = (ts - lastTime) / 1000; // segundos
+                const dt = Math.min((ts - lastTime) / 1000, 0.05); // cap em 50ms para evitar saltos
                 lastTime = ts;
 
                 if (!paused && !isDragging) {
@@ -636,28 +641,14 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 const setW = getSetW();
-                // Wrap infinito — mantém offset dentro de [-setW, setW]
-                if (offset > setW)  offset -= setW;
-                if (offset < -setW) offset += setW;
+                // Wrap: mantém offset em [0, setW)
+                offset = ((offset % setW) + setW) % setW;
 
                 fita.style.transform = `translateX(${-offset}px)`;
                 requestAnimationFrame(loop);
             };
 
-            // Para a linha que vai para a esquerda (direction=-1), offset começa em 0
-            // mas a fita se move para valores negativos, trazendo os clones do final
-            // para a viewport — para evitar espaço vazio no início, começamos
-            // o offset negativo pela metade do set clonado (posição neutra visível).
-            if (direction === -1) {
-                // Aguarda layout ser calculado antes de definir o offset inicial
-                requestAnimationFrame(() => {
-                    const setW = getSetW();
-                    offset = -setW; // começa exibindo os clones (que são cópias dos originais)
-                    requestAnimationFrame(loop);
-                });
-            } else {
-                requestAnimationFrame(loop);
-            }
+            requestAnimationFrame(loop);
 
             // ── HOVER pause/resume ──
             row.addEventListener('mouseenter', () => { paused = true; });
@@ -672,7 +663,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 dragStartX = e.clientX;
                 dragStartOffset = offset;
                 row.classList.add('dragging');
-                if (returnRAF) { cancelAnimationFrame(returnRAF); returnRAF = null; }
             });
 
             window.addEventListener('mousemove', (e) => {
@@ -696,7 +686,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 paused = true;
                 dragStartX = e.touches[0].clientX;
                 dragStartOffset = offset;
-                if (returnRAF) { cancelAnimationFrame(returnRAF); returnRAF = null; }
             }, { passive: true });
 
             row.addEventListener('touchmove', (e) => {
