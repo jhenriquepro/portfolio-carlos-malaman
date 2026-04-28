@@ -956,6 +956,14 @@ button {
     margin: 0 auto;
 }
 
+/* Container que centraliza e limita a janela visível do carrossel */
+.shorts__carrossel__viewport {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 0 var(--section-px);
+    overflow: hidden;
+}
+
 /* Wrapper de cada linha do carrossel */
 .shorts__carrossel {
     width: 100%;
@@ -965,8 +973,8 @@ button {
     -webkit-user-select: none;
     margin-bottom: 1.125rem;
     /* fade nas bordas */
-    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
-    mask-image: linear-gradient(to right, transparent 0%, black 5%, black 95%, transparent 100%);
+    -webkit-mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0%, black 3%, black 97%, transparent 100%);
 }
 
 .shorts__carrossel:last-child { margin-bottom: 0; }
@@ -1363,7 +1371,7 @@ button {
 }
 
 .editor__body {
-    min-height: 150px;
+    min-height: 130px;
     max-height: 280px;
     overflow-y: auto;
     padding: 0.825rem 0.975rem;
