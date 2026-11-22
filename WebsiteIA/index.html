@@ -3,28 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Carlos Malaman — Video Editor, Motion Design and Sound Design portfolio.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Raleway:ital,wght@0,100..900;1,100..900&family=Roboto:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="estilos/style.css">
+    <link rel="stylesheet" href="css/style.css">
     <title>Carlos Malaman — Video Editor</title>
 </head>
 <body>
 
     <!-- HEADER -->
     <header class="cabecalho" id="cabecalho">
-        <a href="#apresentacao" class="cabecalho__logo">CM</a>
-        <nav class="cabecalho__menu" id="menu" aria-label="Navegação principal">
-            <a class="cabecalho__menu__link" href="#apresentacao">Início</a>
-            <a class="cabecalho__menu__link" href="#portfolio">Portfólio</a>
-            <a class="cabecalho__menu__link" href="#shorts">Shorts</a>
-            <a class="cabecalho__menu__link" href="#contatos">Contatos</a>
-            <button class="btn__lang" id="btn-lang" title="Switch to English" aria-label="Trocar idioma">
-                <img class="btn__lang__flag btn__lang__flag--pt" src="assets2/BRA-Flag.png" alt="Português" width="26" height="26">
-                <img class="btn__lang__flag btn__lang__flag--en" src="assets2/USA-Flag.png" alt="English" width="26" height="26" style="display:none">
+        <a href="#apresentacao" class="cabecalho__logo" aria-label="Carlos Malaman">CM</a>
+        <nav class="cabecalho__menu" id="menu" aria-label="Main navigation" data-i18n-aria="nav.ariaMain">
+            <a class="cabecalho__menu__link" href="#apresentacao" data-i18n="nav.home">Home</a>
+            <a class="cabecalho__menu__link" href="#portfolio" data-i18n="nav.portfolio">Portfolio</a>
+            <a class="cabecalho__menu__link" href="#shorts" data-i18n="nav.shorts">Shorts</a>
+            <a class="cabecalho__menu__link" href="#contatos" data-i18n="nav.contact">Contact</a>
+            <button type="button" class="btn__lang" id="btn-lang" title="Switch language to Portuguese" aria-label="Switch language to Portuguese">
+                <img class="btn__lang__flag btn__lang__flag--pt" src="assets/images/flags/br.png" alt="Português" width="26" height="26" decoding="async" style="display:none">
+                <img class="btn__lang__flag btn__lang__flag--en" src="assets/images/flags/us.png" alt="English" width="26" height="26" decoding="async">
             </button>
         </nav>
-        <button class="hamburguer" id="hamburguer" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu">
+        <button type="button" class="hamburguer" id="hamburguer" aria-label="Open menu" aria-expanded="false" aria-controls="menu">
             <span></span>
             <span></span>
             <span></span>
@@ -35,7 +36,7 @@
 
         <!-- HERO -->
         <section id="apresentacao" class="hero">
-            <div class="hero__bg">
+            <div class="hero__bg" aria-hidden="true">
                 <div class="hero__orb hero__orb--1"></div>
                 <div class="hero__orb hero__orb--2"></div>
                 <div class="hero__grid"></div>
@@ -43,45 +44,42 @@
 
             <div class="hero__container">
                 <div class="hero__imagem__wrapper reveal">
-                    <img class="hero__imagem" src="assets/perfil_gostoso.png" alt="Foto do Carlos Malaman">
-                    <div class="hero__imagem__border"></div>
+                    <img class="hero__imagem" src="assets/images/profile/carlos-malaman.png" alt="Carlos Malaman" width="310" height="310" decoding="async">
+                    <div class="hero__imagem__border" aria-hidden="true"></div>
                 </div>
 
                 <div class="hero__conteudo">
-                    <p class="hero__tag reveal reveal--delay-1">✦ Editor de Vídeos</p>
+                    <p class="hero__tag reveal reveal--delay-1" data-i18n="hero.tag">✦ Video Editor</p>
                     <h1 class="hero__titulo reveal reveal--delay-2">
-                        Olá, eu sou<br>
+                        <span data-i18n="hero.greeting">Hi, I'm</span><br>
                         <span class="destaque">Carlos Malaman</span>
                     </h1>
-                    <p class="hero__subtitulo reveal reveal--delay-3">Dando vida aos seus vídeos.</p>
+                    <p class="hero__subtitulo reveal reveal--delay-3" data-i18n="hero.subtitle">Bringing your videos to life.</p>
 
                     <div class="hero__acoes reveal reveal--delay-4">
-                        <a class="btn btn--primario" href="#portfolio">Ver Portfólio</a>
-                        <a class="btn btn--shorts" href="#shorts">Ver Shorts</a>
-                        <a class="btn btn--secundario" href="#contatos">Fale Comigo</a>
+                        <a class="btn btn--primario" href="#portfolio" data-i18n="hero.ctaPortfolio">View Portfolio</a>
+                        <a class="btn btn--shorts" href="#shorts" data-i18n="hero.ctaShorts">View Shorts</a>
+                        <a class="btn btn--secundario" href="#contatos" data-i18n="hero.ctaContact">Contact Me</a>
                     </div>
 
                     <div class="hero__redes reveal reveal--delay-5">
                         <a class="rede__link rede--email" href="mailto:malamancontato@gmail.com" aria-label="Email">
-                            <img src="https://cdn.simpleicons.org/gmail/ffffff" alt="Email" loading="lazy">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
                         </a>
-                        <a class="rede__link rede--discord" href="https://discord.com/invite/yGyrfG3A" target="_blank" aria-label="Discord">
-                            <img src="https://cdn.simpleicons.org/discord/ffffff" alt="Discord" loading="lazy">
+                        <a class="rede__link rede--discord" href="https://discord.com/invite/yGyrfG3A" target="_blank" rel="noopener noreferrer" aria-label="Discord">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
                         </a>
-                        <a class="rede__link rede--x" href="https://x.com/MalamanOficial" target="_blank" aria-label="X / Twitter">
-                            <img src="https://cdn.simpleicons.org/x/ffffff" alt="X" loading="lazy">
+                        <a class="rede__link rede--x" href="https://x.com/MalamanOficial" target="_blank" rel="noopener noreferrer" aria-label="X / Twitter">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
                         </a>
-                        <a class="rede__link rede--whatsapp" href="https://wa.me/5562981182428" target="_blank" aria-label="WhatsApp">
-                            <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="WhatsApp" loading="lazy">
+                        <a class="rede__link rede--youtube" href="https://www.youtube.com/@MalamanOficial" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg>
                         </a>
-                        <a class="rede__link rede--youtube" href="https://www.youtube.com/@MalamanOficial" target="_blank" aria-label="YouTube">
-                            <img src="https://cdn.simpleicons.org/youtube/ffffff" alt="YouTube" loading="lazy">
+                        <a class="rede__link rede--instagram" href="https://www.instagram.com/carlos_malaman" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/></svg>
                         </a>
-                        <a class="rede__link rede--instagram" href="https://www.instagram.com/carlos_malaman" target="_blank" aria-label="Instagram">
-                            <img src="https://cdn.simpleicons.org/instagram/ffffff" alt="Instagram" loading="lazy">
-                            <a class="rede__link rede--tiktok" href="https://www.tiktok.com/@malamanoficial" target="_blank" aria-label="TikTok">
-                            <img src="https://cdn.simpleicons.org/tiktok/ffffff" alt="TikTok" loading="lazy">
-                        </a>
+                        <a class="rede__link rede--tiktok" href="https://www.tiktok.com/@malamanoficial" target="_blank" rel="noopener noreferrer" aria-label="TikTok">
+                            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.19-3.44-3.37-3.65-5.71-.02-.5-.03-1-.01-1.49.18-1.9 1.12-3.72 2.58-4.96 1.66-1.44 3.98-2.13 6.15-1.72.02 1.48-.04 2.96-.04 4.44-.99-.32-2.15-.23-3.02.37-.63.41-1.11 1.04-1.36 1.75-.21.51-.15 1.07-.14 1.61.24 1.64 1.82 3.02 3.5 2.87 1.12-.01 2.19-.66 2.77-1.61.19-.33.4-.67.41-1.06.1-1.79.06-3.57.07-5.36.01-4.03-.01-8.05.02-12.07z"/></svg>
                         </a>
                     </div>
                 </div>
@@ -89,13 +87,13 @@
 
             <!-- Dual scroll navigation (desktop only) -->
             <div class="scroll__nav__wrapper" id="scroll-nav-wrapper">
-                <button class="scroll__nav__btn" id="scroll-prev" aria-label="Seção anterior">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <button type="button" class="scroll__nav__btn" id="scroll-prev" aria-label="Previous section" data-i18n-aria="nav.ariaPrevSection">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <polyline points="18 15 12 9 6 15"></polyline>
                     </svg>
                 </button>
-                <button class="scroll__nav__btn" id="scroll-next" aria-label="Próxima seção">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <button type="button" class="scroll__nav__btn" id="scroll-next" aria-label="Next section" data-i18n-aria="nav.ariaNextSection">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <polyline points="6 9 12 15 18 9"></polyline>
                     </svg>
                 </button>
@@ -104,22 +102,22 @@
             <!-- STACK — visível na tela inicial -->
             <div class="ferramentas hero__ferramentas">
                 <div class="ferramentas__inner">
-                    <span class="ferramentas__rotulo">Stack</span>
+                    <span class="ferramentas__rotulo" data-i18n="hero.stackLabel">Stack</span>
                     <div class="ferramentas__lista">
                         <div class="ferramenta__item" title="Adobe Premiere Pro">
-                            <img src="assets2/Premiere-pro.png" alt="Premiere Pro" loading="lazy">
+                            <img src="assets/images/tools/premiere-pro.png" alt="Adobe Premiere Pro" width="20" height="20" decoding="async">
                             <span>Premiere</span>
                         </div>
                         <div class="ferramenta__item" title="Adobe After Effects">
-                            <img src="assets2/After-Effects.png" alt="After Effects" loading="lazy">
+                            <img src="assets/images/tools/after-effects.png" alt="Adobe After Effects" width="20" height="20" decoding="async">
                             <span>After Effects</span>
                         </div>
                         <div class="ferramenta__item" title="Adobe Photoshop">
-                            <img src="assets2/Photoshop.png" alt="Photoshop" loading="lazy">
+                            <img src="assets/images/tools/photoshop.png" alt="Adobe Photoshop" width="20" height="20" decoding="async">
                             <span>Photoshop</span>
                         </div>
                         <div class="ferramenta__item" title="Frame.io">
-                            <img src="assets2/Frame-io.png" alt="Frame.io" loading="lazy">
+                            <img src="assets/images/tools/frame-io.png" alt="Frame.io" width="20" height="20" decoding="async">
                             <span>Frame.io</span>
                         </div>
                     </div>
@@ -127,352 +125,272 @@
             </div>
         </section>
 
-        <!-- STATS BAR -->
-        <!-- <div class="stats">
-            <div class="stats__item">
-                <span class="stats__num">50+</span>
-                <span class="stats__label">Projetos entregues</span>
-            </div>
-            <div class="stats__divisor"></div>
-            <div class="stats__item">
-                <span class="stats__num">3+</span>
-                <span class="stats__label">Anos de experiência</span>
-            </div>
-            <div class="stats__divisor"></div>
-            <div class="stats__item">
-                <span class="stats__num">100%</span>
-                <span class="stats__label">Clientes satisfeitos</span>
-            </div>
-        </div> -->
-
         <!-- PORTFOLIO -->
         <section id="portfolio" class="portfolio">
             <div class="portfolio__header reveal">
-                <p class="section__tag">✦ Meus Trabalhos</p>
-                <h2 class="section__titulo">Portfólio</h2>
-                <p class="section__subtitulo">Uma seleção dos meus melhores projetos de edição.</p>
+                <p class="section__tag" data-i18n="portfolio.tag">✦ My Work</p>
+                <h2 class="section__titulo" data-i18n="portfolio.title">Portfolio</h2>
+                <p class="section__subtitulo" data-i18n="portfolio.subtitle">A selection of my best editing projects.</p>
             </div>
 
             <div class="portfolio__grade">
-                <div class="video__card reveal">
+                <article class="video__card reveal">
                     <div class="video__wrapper">
-                        <iframe class="video__iframe" src="https://www.youtube.com/embed/uBYjF4wlC84?si=R6gCgWDthHf5BhH_" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe class="video__iframe" loading="lazy" src="https://www.youtube.com/embed/uBYjF4wlC84?si=R6gCgWDthHf5BhH_" title="Terraria — Video editing project" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                     <div class="video__info">
                         <span class="video__tag">YouTube</span>
                         <h3 class="video__titulo">Terraria</h3>
                     </div>
-                </div>
+                </article>
 
-                <div class="video__card reveal reveal--delay-1">
+                <article class="video__card reveal reveal--delay-1">
                     <div class="video__wrapper">
-                        <iframe class="video__iframe" src="https://www.youtube.com/embed/kr6RmgJfHFc?si=YU8fnGd5mNNv0K47" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe class="video__iframe" loading="lazy" src="https://www.youtube.com/embed/kr6RmgJfHFc?si=YU8fnGd5mNNv0K47" title="Playstation 2 — Video editing project" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                     <div class="video__info">
                         <span class="video__tag">YouTube</span>
                         <h3 class="video__titulo">Playstation 2</h3>
                     </div>
-                </div>
+                </article>
 
-                <div class="video__card reveal reveal--delay-2">
+                <article class="video__card reveal reveal--delay-2">
                     <div class="video__wrapper">
-                        <iframe class="video__iframe" src="https://www.youtube.com/embed/nSVCkTm_3ak?si=HGYvrFJ7hpu28r36" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe class="video__iframe" loading="lazy" src="https://www.youtube.com/embed/nSVCkTm_3ak?si=HGYvrFJ7hpu28r36" title="Undertale — Video editing project" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                     <div class="video__info">
                         <span class="video__tag">YouTube</span>
                         <h3 class="video__titulo">Undertale</h3>
                     </div>
-                </div>
+                </article>
 
-                <div class="video__card reveal reveal--delay-3">
+                <article class="video__card reveal reveal--delay-3">
                     <div class="video__wrapper">
-                        <iframe class="video__iframe" src="https://www.youtube.com/embed/YFFOSr3KUqk?si=xVeW2PG9GA-HIuKC" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe class="video__iframe" loading="lazy" src="https://www.youtube.com/embed/YFFOSr3KUqk?si=xVeW2PG9GA-HIuKC" title="Invencível — Video editing project" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                     <div class="video__info">
                         <span class="video__tag">YouTube</span>
                         <h3 class="video__titulo">Invencível</h3>
                     </div>
-                </div>
+                </article>
 
-                <div class="video__card reveal reveal--delay-1">
+                <article class="video__card reveal reveal--delay-1">
                     <div class="video__wrapper">
-                        <iframe class="video__iframe" src="https://www.youtube.com/embed/x7-gclcs0Kk?si=7Zo99x2mmRphoa3h&amp;start=199" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe class="video__iframe" loading="lazy" src="https://www.youtube.com/embed/x7-gclcs0Kk?si=7Zo99x2mmRphoa3h&amp;start=199" title="Fiona &amp; Cake — Video editing project" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                     <div class="video__info">
                         <span class="video__tag">YouTube</span>
-                        <h3 class="video__titulo">Fiona & Cake</h3>
+                        <h3 class="video__titulo">Fiona &amp; Cake</h3>
                     </div>
-                </div>
+                </article>
 
-                <div class="video__card reveal reveal--delay-2">
+                <article class="video__card reveal reveal--delay-2">
                     <div class="video__wrapper">
-                        <iframe class="video__iframe" src="https://www.youtube.com/embed/DhFKlwNxL1M?si=SMBsi4QitnxIs77H&amp;start=337" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                        <iframe class="video__iframe" loading="lazy" src="https://www.youtube.com/embed/DhFKlwNxL1M?si=SMBsi4QitnxIs77H&amp;start=337" title="Roguelike — Video editing project" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
                     </div>
                     <div class="video__info">
                         <span class="video__tag">YouTube</span>
                         <h3 class="video__titulo">Roguelike</h3>
                     </div>
-                </div>
+                </article>
             </div>
         </section>
 
         <!-- SHORTS -->
         <section id="shorts" class="shorts">
             <div class="shorts__header reveal">
-                <p class="section__tag">✦ Shorts & Reels</p>
-                <h2 class="section__titulo">Ver Shorts</h2>
-                <p class="section__subtitulo">Edições rápidas, cortes dinâmicos e muito ritmo.</p>
+                <p class="section__tag" data-i18n="shorts.tag">✦ Shorts &amp; Reels</p>
+                <h2 class="section__titulo" data-i18n="shorts.title">View Shorts</h2>
+                <p class="section__subtitulo" data-i18n="shorts.subtitle">Fast edits, dynamic cuts, and great pacing.</p>
+            </div>
+
+            <div class="shorts__controles">
+                <button type="button" class="shorts__pause__btn" id="shorts-toggle-motion" aria-pressed="false">
+                    <span data-shorts-pause-label>Pause carousel</span>
+                </button>
             </div>
 
             <div class="shorts__carrossel__viewport">
 
-            <!-- CARROSSEL — Linha de cima: rola para a DIREITA -->
-            <div class="shorts__carrossel" id="shorts-row-top" data-direction="right">
-                <div class="shorts__fita">
-                    <!-- Cards originais -->
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <!-- CARROSSEL — Linha de cima: rola para a DIREITA -->
+                <div class="shorts__carrossel" id="shorts-row-top" data-direction="right">
+                    <div class="shorts__fita">
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Short</span>
+                                <h3 class="short__titulo">Nintendo</h3>
+                            </div>
+                        </article>
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/OfmHx47i78s" title="Porque as batalhas de Undertale SÃO EM PRETO E BRANCO" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Short</span>
+                                <h3 class="short__titulo">Undertale</h3>
+                            </div>
+                        </article>
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Short</span>
+                                <h3 class="short__titulo">Terraria</h3>
+                            </div>
+                        </article>
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/xV9-_jfmkJM" title="O Modchip que SALVOU O PLAYSTATION 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Reel</span>
+                                <h3 class="short__titulo">Playstation 2</h3>
+                            </div>
+                        </article>
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Short</span>
+                                <h3 class="short__titulo">Terraria</h3>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <!-- CARROSSEL — Linha de baixo: rola para a ESQUERDA -->
+                <div class="shorts__carrossel" id="shorts-row-bottom" data-direction="left">
+                    <div class="shorts__fita">
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/xV9-_jfmkJM" title="O Modchip que SALVOU O PLAYSTATION 2" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Reel</span>
+                                <h3 class="short__titulo">Playstation 2</h3>
+                            </div>
+                        </article>
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Short</span>
+                                <h3 class="short__titulo">Nintendo</h3>
+                            </div>
+                        </article>
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/OfmHx47i78s" title="Porque as batalhas de Undertale SÃO EM PRETO E BRANCO" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Short</span>
+                                <h3 class="short__titulo">Undertale</h3>
+                            </div>
+                        </article>
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Short</span>
+                                <h3 class="short__titulo">Terraria</h3>
+                            </div>
+                        </article>
+                        <article class="short__card">
+                            <div class="short__wrapper">
+                                <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                            </div>
+                            <div class="short__info">
+                                <span class="short__tag">Short</span>
+                                <h3 class="short__titulo">Nintendo</h3>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+            </div>
+        </section>
+
+        <!-- CONTATOS -->
+        <section id="contatos" class="contatos">
+            <div class="contatos__inner">
+                <div class="contatos__esquerda reveal">
+                    <div class="contatos__cabecalho">
+                        <div>
+                            <p class="section__tag" data-i18n="contact.tag">✦ Let's Talk</p>
+                            <h2 class="section__titulo">
+                                <span data-i18n="contact.titleLine1">Get in</span><br>
+                                <span data-i18n="contact.titleLine2">Touch</span>
+                            </h2>
                         </div>
-                        <div class="short__info">
-                            <span class="short__tag">Short</span>
-                            <h3 class="short__titulo">Nintendo</h3>
+                        <div class="contatos__foto">
+                            <img src="assets/images/profile/carlos-malaman.png" alt="Carlos Malaman" class="contatos__img" width="122" height="122" loading="lazy" decoding="async">
+                            <div class="contatos__foto__ring" aria-hidden="true"></div>
                         </div>
                     </div>
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/OfmHx47i78s" title="Porque as batalhas de Undertale SÃO EM PRETO E BRANCO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="short__info">
-                            <span class="short__tag">Short</span>
-                            <h3 class="short__titulo">Undertale</h3>
-                        </div>
-                    </div>
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="short__info">
-                            <span class="short__tag">Short</span>
-                            <h3 class="short__titulo">Terraria</h3>
-                        </div>
-                    </div>
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/xV9-_jfmkJM" title="O Modchip que SALVOU O PLAYSTATION 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="short__info">
-                            <span class="short__tag">Reel</span>
-                            <h3 class="short__titulo">Playstation 2</h3>
-                        </div>
-                    </div>
-                    <!-- +1 card extra (Terraria repetido) para volume visual -->
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="short__info">
-                            <span class="short__tag">Short</span>
-                            <h3 class="short__titulo">Terraria</h3>
+
+                    <p class="contatos__descricao" data-i18n="contact.description">Ready to take your content to the next level? Reach out directly and let's create something awesome together.</p>
+                </div>
+
+                <div class="contatos__direita reveal reveal--delay-2">
+                    <div class="contatos__card">
+                        <h3 class="contatos__card__titulo" data-i18n="contact.cardTitle">Direct Contact</h3>
+                        <p class="contatos__card__nota" data-i18n="contact.cardNote">Preferred channel: Discord. When reaching out, please share a reference video and a brief description of what you are looking for.</p>
+
+                        <div class="contatos__canais">
+                            <a class="btn btn--discord btn--full" href="https://discord.com/invite/yGyrfG3A" target="_blank" rel="noopener noreferrer">
+                                <svg class="btn__icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.057 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994.021-.041.001-.09-.041-.106a13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/></svg>
+                                <span data-i18n="contact.discordCta">Message on Discord (Preferred)</span>
+                            </a>
+
+                            <div class="contatos__redes">
+                                <a class="contatos__rede" href="mailto:malamancontato@gmail.com">
+                                    <span class="contatos__rede__lado">
+                                        <svg class="contatos__rede__icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
+                                        <span data-i18n="contact.emailLabel">Email</span>
+                                    </span>
+                                    <span class="contatos__rede__detalhe" data-i18n="contact.emailDetail">Direct mailto</span>
+                                </a>
+
+                                <a class="contatos__rede" href="https://x.com/MalamanOficial" target="_blank" rel="noopener noreferrer">
+                                    <span class="contatos__rede__lado">
+                                        <svg class="contatos__rede__icone" viewBox="0 0 24 24" aria-hidden="true"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                                        <span data-i18n="contact.twitterLabel">X / Twitter</span>
+                                    </span>
+                                    <span class="contatos__rede__detalhe" data-i18n="contact.twitterDetail">Secondary channel</span>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                    <!-- Clones para loop infinito (duplicados via JS) -->
                 </div>
             </div>
-
-            <!-- CARROSSEL — Linha de baixo: rola para a ESQUERDA -->
-            <div class="shorts__carrossel" id="shorts-row-bottom" data-direction="left">
-                <div class="shorts__fita">
-                    <!-- Cards originais -->
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/xV9-_jfmkJM" title="O Modchip que SALVOU O PLAYSTATION 2" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="short__info">
-                            <span class="short__tag">Reel</span>
-                            <h3 class="short__titulo">Playstation 2</h3>
-                        </div>
-                    </div>
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="short__info">
-                            <span class="short__tag">Short</span>
-                            <h3 class="short__titulo">Nintendo</h3>
-                        </div>
-                    </div>
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/OfmHx47i78s" title="Porque as batalhas de Undertale SÃO EM PRETO E BRANCO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="short__info">
-                            <span class="short__tag">Short</span>
-                            <h3 class="short__titulo">Undertale</h3>
-                        </div>
-                    </div>
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/QA6giBOE5dQ" title="TOP 3 MELHORES BOSSES DE TERRARIA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="short__info">
-                            <span class="short__tag">Short</span>
-                            <h3 class="short__titulo">Terraria</h3>
-                        </div>
-                    </div>
-                    <!-- +1 card extra (Nintendo repetido) para volume visual -->
-                    <div class="short__card">
-                        <div class="short__wrapper">
-                            <iframe class="short__iframe" loading="lazy" src="https://www.youtube.com/embed/nnYtBp6B8-A" title="A Nintendo perdeu o MAIOR CONSOLE DO SÉCULO" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
-                        </div>
-                        <div class="short__info">
-                            <span class="short__tag">Short</span>
-                            <h3 class="short__titulo">Nintendo</h3>
-                        </div>
-                    </div>
-                    <!-- Clones para loop infinito (duplicados via JS) -->
-                </div>
-            </div><!-- /.shorts__carrossel bottom -->
-
-            </div><!-- /.shorts__carrossel__viewport -->
         </section>
 
     </main>
 
-    <!-- CONTATOS -->
-    <section id="contatos" class="contatos">
-        <div class="contatos__inner">
-            <div class="contatos__esquerda reveal">
-                <div class="contatos__cabecalho">
-                    <div>
-                        <p class="section__tag">✦ Vamos Conversar</p>
-                        <h2 class="section__titulo">Entre em<br>Contato</h2>
-                    </div>
-                    <div class="contatos__foto">
-                        <img src="assets/perfil_gostoso.png" alt="Carlos Malaman" class="contatos__img">
-                        <div class="contatos__foto__ring"></div>
-                    </div>
-                </div>
-
-                <p class="contatos__descricao">Pronto para levar seu conteúdo ao próximo nível? Me envie uma mensagem e vamos criar algo incrível juntos.</p>
-
-                <div class="contatos__redes">
-                    <a class="contatos__rede" href="mailto:malamancontato@gmail.com">
-                        <img src="https://cdn.simpleicons.org/gmail/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
-                        <span>Email</span>
-                    </a>
-                    <a class="contatos__rede" href="https://discord.com/invite/yGyrfG3A" target="_blank">
-                        <img src="https://cdn.simpleicons.org/discord/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
-                        <span>Discord</span>
-                    </a>
-                    <a class="contatos__rede" href="https://x.com/MalamanOficial" target="_blank">
-                        <img src="https://cdn.simpleicons.org/x/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
-                        <span>Twitter</span>
-                    </a>
-                    <a class="contatos__rede" href="https://www.instagram.com/carlos_malaman" target="_blank">
-                        <img src="https://cdn.simpleicons.org/instagram/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
-                        <span>Instagram</span>
-                    </a>
-                    <a class="contatos__rede" href="https://wa.me/SEU_NUMERO_AQUI" target="_blank">
-                        <img src="https://cdn.simpleicons.org/whatsapp/ffffff" alt="" class="contatos__rede__icone" loading="lazy">
-                        <span>WhatsApp</span>
-                    </a>
-                </div>
-            </div>
-
-            <div class="contatos__direita reveal reveal--delay-2">
-                <form class="contatos__form" id="envio__email" novalidate>
-                    <div class="form__grupo">
-                        <label class="form__label" for="email-usuario">Seu E-mail</label>
-                        <input class="form__input" type="email" id="email-usuario" placeholder="exemplo@gmail.com" required>
-                        <span class="form__erro" id="erro-email"></span>
-                    </div>
-
-                    <div class="form__grupo">
-                        <label class="form__label" for="assunto-usuario">Assunto</label>
-                        <input class="form__input" type="text" id="assunto-usuario" placeholder="Quero contratar seus serviços." required>
-                        <span class="form__erro" id="erro-assunto"></span>
-                    </div>
-
-                    <div class="form__grupo">
-                        <label class="form__label">Mensagem</label>
-                        <div class="editor__wrapper" id="editor-wrapper">
-                            <!-- Toolbar -->
-                            <div class="editor__toolbar" id="editor-toolbar">
-                                <button type="button" class="editor__toolbar__btn" data-cmd="bold" title="Negrito (Ctrl+B)"><b>B</b></button>
-                                <button type="button" class="editor__toolbar__btn" data-cmd="italic" title="Itálico (Ctrl+I)"><i>I</i></button>
-                                <button type="button" class="editor__toolbar__btn" data-cmd="underline" title="Sublinhado (Ctrl+U)">
-                                    <svg viewBox="0 0 24 24"><path d="M6 3v7a6 6 0 0 0 12 0V3"/><line x1="4" y1="21" x2="20" y2="21"/></svg>
-                                </button>
-                                <button type="button" class="editor__toolbar__btn" data-cmd="strikeThrough" title="Tachado">
-                                    <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><path d="M16 6C16 6 14.5 4 12 4C9.5 4 7 5.5 7 8C7 10 8.5 11 10 11.5"/><path d="M8 18C8 18 9.5 20 12 20C14.5 20 17 18.5 17 16C17 14 15.5 13 14 12.5"/></svg>
-                                </button>
-                                <div class="editor__toolbar__divisor"></div>
-                                <button type="button" class="editor__toolbar__btn" data-cmd="insertUnorderedList" title="Lista">
-                                    <svg viewBox="0 0 24 24"><line x1="9" y1="6" x2="20" y2="6"/><line x1="9" y1="12" x2="20" y2="12"/><line x1="9" y1="18" x2="20" y2="18"/><circle cx="4" cy="6" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="12" r="1" fill="currentColor" stroke="none"/><circle cx="4" cy="18" r="1" fill="currentColor" stroke="none"/></svg>
-                                </button>
-                                <button type="button" class="editor__toolbar__btn" data-cmd="insertOrderedList" title="Lista numerada">
-                                    <svg viewBox="0 0 24 24"><line x1="10" y1="6" x2="21" y2="6"/><line x1="10" y1="12" x2="21" y2="12"/><line x1="10" y1="18" x2="21" y2="18"/><path d="M4 6h1v4" stroke="currentColor"/><path d="M4 10h2" stroke="currentColor"/><path d="M6 18H4c0-1 2-2 2-3s-1-1.5-2-1" stroke="currentColor"/></svg>
-                                </button>
-                                <div class="editor__toolbar__divisor"></div>
-                                <button type="button" class="editor__toolbar__btn" data-cmd="justifyLeft" title="Alinhar à esquerda">
-                                    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="15" y2="12"/><line x1="3" y1="18" x2="18" y2="18"/></svg>
-                                </button>
-                                <button type="button" class="editor__toolbar__btn" data-cmd="justifyCenter" title="Centralizar">
-                                    <svg viewBox="0 0 24 24"><line x1="3" y1="6" x2="21" y2="6"/><line x1="6" y1="12" x2="18" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
-                                </button>
-                                <div class="editor__toolbar__divisor"></div>
-                                <button type="button" class="editor__toolbar__btn" data-cmd="removeFormat" title="Limpar formatação">
-                                    <svg viewBox="0 0 24 24"><path d="M6 19L19 6"/><path d="M14 4l2 2-7.5 7.5"/><path d="M5 19h7"/></svg>
-                                </button>
-                            </div>
-                            <!-- Área editável -->
-                            <div class="editor__body"
-                                 id="editor-body"
-                                 contenteditable="true"
-                                 role="textbox"
-                                 aria-multiline="true"
-                                 aria-label="Mensagem"
-                                 data-placeholder="Olá Carlos, gostaria de...">
-                            </div>
-                            <!-- Footer: anexo + chips -->
-                            <div class="editor__footer">
-                                <label class="editor__anexo__btn" for="anexo-input" title="Anexar arquivo">
-                                    <svg viewBox="0 0 24 24"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66l-9.2 9.19a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
-                                    Anexar arquivo
-                                </label>
-                                <input type="file" id="anexo-input" multiple accept="*/*">
-                                <div class="editor__anexos__lista" id="anexos-lista"></div>
-                            </div>
-                        </div>
-                        <span class="form__erro" id="erro-texto"></span>
-                    </div>
-
-                    <button class="btn btn--primario btn--full" type="submit" id="btn-enviar">
-                        <span class="btn__texto">Enviar Mensagem</span>
-                        <span class="btn__check" aria-hidden="true">✓ Enviado!</span>
-                    </button>
-                </form>
-            </div>
-        </div>
-    </section>
-
     <footer class="rodape">
-        <button class="rodape__topo--mobile" id="btn-topo-mobile" aria-label="Voltar ao topo">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><polyline points="18 15 12 9 6 15"></polyline></svg>
-            Voltar ao topo
+        <button type="button" class="rodape__topo--mobile" id="btn-topo-mobile" aria-label="Back to top" data-i18n-aria="footer.backToTop">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" aria-hidden="true"><polyline points="18 15 12 9 6 15"></polyline></svg>
+            <span data-i18n="footer.backToTop">Back to top</span>
         </button>
         <p class="rodape__texto">
-            <span class="rodape__marca">Carlos Malaman</span> — Editor de Vídeos
+            <span class="rodape__marca">Carlos Malaman</span> — <span data-i18n="footer.role">Video Editor</span>
         </p>
-        <p class="rodape__dev">Desenvolvido por <a href="https://www.instagram.com/jhenrique_dev" target="_blank" class="rodape__dev__link">JHENRIQUEDEV</a></p>
+        <p class="rodape__dev">
+            <span data-i18n="footer.developedBy">Developed by</span>
+            <a href="https://www.instagram.com/jhenrique_dev" target="_blank" rel="noopener noreferrer" class="rodape__dev__link">JHENRIQUEDEV</a>
+        </p>
     </footer>
 
     <!-- OVERLAY DO MENU MOBILE -->
     <div class="menu__overlay" id="menu-overlay" aria-hidden="true"></div>
 
-    <!-- EmailJS SDK -->
-    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
-    <script src="js/main.js"></script>
+    <script type="module" src="js/main.js"></script>
 </body>
 </html>

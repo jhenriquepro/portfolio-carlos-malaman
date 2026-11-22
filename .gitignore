@@ -1,0 +1,28 @@
+# OS & Editor
+.DS_Store
+Thumbs.db
+desktop.ini
+*.swp
+*.swo
+.vscode/*
+!.vscode/extensions.json
+.idea/
+
+# Dependencies & Build (caso ferramentas de dev sejam usadas localmente)
+node_modules/
+npm-debug.log*
+
+# Ambientes e segredos (nunca versionar)
+.env
+.env.*
+*.pem
+*.key
+*serviceAccount*.json
+*firebase-adminsdk*.json
+
+# Firebase Emulators & Cache
+.firebase/
+firebase-debug.log
+firestore-debug.log
+ui-debug.log
+emulator-data/

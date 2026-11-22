@@ -1,0 +1,319 @@
+OBJETIVO DO NEGÓCIO:
+Qual é o principal objetivo desse site?
+R: Apresentar seu portfólio.
+(Ele utiliza do caard, considera mto básico e saturado, e não é profissional, genérico)
+
+O que você espera que aconteça depois que alguém visitar o site?
+R: Facilitar contato com o editor
+
+O que seria, para você, um site que "deu certo"?
+R: Que o cliente chegue ao editor sabendo o seu trabalho, seus resultados, e o que esperar (saber o nicho de edição e sentir que o trabalho atende o que é desejado). Evitar solicitações de edição que não condizem com o nicho. Sentir que não é genérico.
+
+Você quer principalmente:
+* Conseguir novos clientes? - TERCIÁRIO
+* Apresentar seu trabalho? - SECUNDÁRIO
+* Construir autoridade? - PRINCIPAL
+* Conseguir trabalhos específicos? - INDIFERENTE
+* Direcionar pessoas para suas redes? - INDIFERENTE
+
+O editor irá prospectar independente do site, o site será só uma ferramenta para alcançar o resultado.
+
+Quem você quer que contrate você/serviços?
+R: Algum contratante de fora (a ideia é receber em moeda forte).
+
+Você já tem um tipo de cliente ideal?
+R: Um cliente que já tenha um canal consolidado ou em ascensão.
+
+Que tipo de trabalho você não quer receber?
+R: Tráfego pago brasileiro / agência brasileira.
+
+Foco principal em ser contratado por fora, se for no Brasil, o ticket tem que ser maior.
+
+
+
+------------------
+
+**[MANTER]**  
+Já existe e está bom.
+**[ALTERAR]**  
+Existe, mas não atende totalmente.
+**[ADICIONAR]**  
+Não existe.
+**[REMOVER]**  
+Existe, mas não deveria existir.
+**[CORRIGIR]**  
+Existe, mas está com comportamento errado.
+
+PÚBLICO ALVO:
+Quem normalmente procura um editor como você:
+* Criadores de conteúdo? - OK
+* Empresas?
+* YouTubers? - OK
+* Streamers?
+* Influenciadores? - OK
+* Agências?
+* Pessoas físicas?
+
+Você quer trabalhar com clientes brasileiros, estrangeiros ou ambos?
+R: Ambos - contudo, brasileiros com ticket alto. (Proposta principal - estrangeiros)
+
+Seu cliente ideal já sabe o que quer ou geralmente precisa conversar para explicar?
+R: Já sabe o que quer.
+
+**Extra**: Imagine que eu sou seu cliente ideal e entrei no site pela primeira vez. O que você gostaria que eu entendesse nos primeiros 10 segundos?
+R: Onde está o portfólio
+
+IDENTIDADE E POSICIONAMENTO:
+Como você quer ser percebido?
+- Profissional? - SECUNDÁRIO
+- Criativo? - PRIORIDADE
+- Técnico?
+- Descontraído?
+- Premium?
+- Acessível? - SECUNDÁRIO
+
+Que tipo de editor você é?
+R: Excelente storyteller - Profissional, responde rápido (tenta manter o cliente), voltado pro nicho de cultura geek no geral - podendo entrar no nicho financeiro também (pois tem algumas relações com o formato de edição).
+
+Quais são seus principais diferenciais?
+R: Responsabilidade para com o trabalho.
+
+O que você faz melhor que outros editores?
+R: Para iniciantes - Fluidez, storyteller, mantém bom contato e relacionamento com os clientes.
+
+Quais estilos de edição você domina?
+R: Talking head, dark channel, tráfego pago, redes em geral (tiktok, shorts, reels), geek
+
+Quais serviços você oferece?
+R: Edição de Vídeo, Motion Design e Sound Design.
+
+Quais serviços pretende oferecer futuramente?
+R: Modelagem 3D
+
+Existem trabalhos que representam particularmente bem seu estilo?
+R: Canal próprio do YouTube e clientes atuais.
+
+Existe alguma coisa no site atual que **não representa você**?
+R: Diminuir a quantidade de redes sociais, o display do site num geral está meio genérico
+
+CONTEÚDO DO SITE
+### Hero
+
+Nome está correto?
+R: Sim.
+
+Foto está adequada?
+R: Sim.
+
+Cargo está adequado?
+R: Está (mas quer alterar disposição, posição e tamanho)
+
+Frase principal representa você?
+R: Genérica, mas curte frase pequena e de impacto.
+
+O que deveria aparecer imediatamente?
+R: Vídeo demonstração de fundo como wallpaper, por exemplo. E botões para ver portfólio e youtubejobs evidentes.
+
+Qual deveria ser o principal botão?
+R: Portfólio e YTJobs
+
+Quer mostrar redes sociais?
+R: Sim.
+
+Quais?
+R: Discord, Twitter.
+
+### Portfólio
+
+Quais trabalhos devem aparecer?
+R: (COLETAR INFORMAÇÃO DEPOIS)
+
+Quantos?
+R: Seis.
+
+Quais são os melhores?
+R:  (COLETAR INFORMAÇÕES DEPOIS)
+
+Quer separar por categorias?
+R: Não
+
+Quer mostrar descrição de cada projeto?
+R: Não
+
+Quer explicar o que foi feito em cada vídeo?
+R: Não
+
+Quer mostrar duração?
+R: Sim.
+
+Quer mostrar ferramentas utilizadas?
+R: Sim.
+
+Quer destacar determinados projetos?
+R: Sim.
+
+
+### Shorts/Reels
+
+Shorts são realmente importantes para conseguir clientes?
+R: Sim.
+
+Quer manter o carrossel?
+R: Sim
+
+Quer separar Shorts de Reels?
+R: Não.
+
+Quer colocar Instagram/TikTok?
+R: Sim.
+
+Quer mostrar apenas vídeos verticais?
+R: Sim.
+
+Quer permitir clicar e assistir em tela maior?
+R: Sim.
+
+
+### Contato
+
+Qual é a forma preferida de receber clientes?
+* Twitter? - SECUNDÁRIO
+* E-mail? - SECUNDÁRIO
+* Discord? - PREFERIDA
+* Instagram?
+* Formulário?
+
+"*Quando alguém entra em contato querendo contratar você, quais informações você precisa saber para conseguir avaliar o trabalho?*"
+R: Vídeo de referência - Breve descrição do que o cliente gostaria.
+
+Quer receber arquivos de referência?
+R: Não.
+
+Quer perguntar orçamento diretamente?
+R: Após contato.
+
+Quer perguntar prazo?
+R: Irrelevante.
+
+Quer perguntar tipo de vídeo?
+R: Não.
+
+Quer perguntar quantidade de vídeos?
+R: Irrelevante.
+
+Quer perguntar orçamento disponível?
+R: Não.
+
+FLUXO DO CLIENTE:
+**SIMULAÇÃO:**
+Vamos imaginar que eu sou um cliente que nunca ouviu falar de você. Entrei no site. O que acontece?
+R: O cliente tem que sentir que o editor passa autoridade (profissionalismo).
+
+Entrada → Descoberta → Avaliação → Decisão → Contato.
+
+### Entrada
+
+Como o cliente chega ao site?
+- Instagram?
+- Prospecção ativa (mandando DM) - DISCORD e TWITTER
+- Futuramente com disponibilização de tutoriais para chamar atenção.
+- Google?
+- indicação?
+- YouTube?
+- WhatsApp?
+
+### Descoberta
+
+- O que ele precisa descobrir primeiro?
+Visualizar o Portfólio
+
+### Avaliação
+
+Como ele decide se você é bom?
+- Portfólio? - PRINCIPAL
+- Preço?
+- Experiência?
+- Depoimentos?
+- Número de projetos?
+- Clientes anteriores?
+
+### Decisão
+
+- O que faria o cliente confiar em você?
+R: O Portfólio
+
+### Contato
+
+- O que ele deve fazer quando decidir contratar?
+Realizar o contato através do discord (principalmente).
+
+REQUISITOS NÃO FUNCIONAIS:
+O site precisa funcionar perfeitamente em celular?
+R: Sim.
+
+Qual é a prioridade: celular ou desktop?
+R: Desktop.
+
+Precisa carregar rapidamente?
+R: Sim - 1s no máximo.
+
+Precisa funcionar em conexões lentas?
+R: Sim.
+
+Precisa ser acessível?
+R: Sim.
+
+Precisa ter SEO?
+R: Sim (futuramente).
+
+Precisa aparecer no Google?
+R: Sim.
+
+Precisa ter domínio próprio?
+R: Sim.
+
+Precisa de analytics?
+R:  (VALIDAR DEPOIS) - NÃO
+
+Precisa ser bilíngue?
+R: Sim - Inglês preferencialmente.
+
+Quais idiomas?
+R: Inglês - Português
+
+O site será atualizado frequentemente?
+R: Sim.
+
+Quem vai atualizar o portfólio?
+R: O editor.
+
+Você quer conseguir adicionar vídeos sem mexer no código?
+R: Sim.
+
+RESTRIÇÕES:
+O que você **não quer mudar** no site atual?
+R: A fonte, 6 vídeos, carrossel, botões de navegações entre categorias e telas, botão de idioma.
+
+O que você mais gosta nele?
+R: A Home funcional (consegue navegar facilmente).
+
+O que você menos gosta?
+R: Estética de IA.
+
+Existe alguma referência de outro site?
+R: Sim (COLETAR DEPOIS).
+
+Existe alguma coisa que você considera obrigatória?
+R: Portfólio e contatos.
+
+Existe alguma coisa que você considera proibida?
+R: Ninguém além do editor poderá modificar o vídeo, não vazar o contato dos clientes.
+
+Existe limite de orçamento?
+R: Não.
+
+Existem ferramentas que precisam ser utilizadas?
+R: Somente a de possibilitar envio de e-mail.
+
+Existe alguma limitação técnica que eu precise conhecer?
+R: Não.
