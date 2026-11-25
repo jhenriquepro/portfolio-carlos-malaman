@@ -1,5 +1,6 @@
 /* =========================================
    SHORTS.JS — Carrossel infinito sob demanda (thumbnails + modal)
+   Suporta re-renderização limpa (tempo real Firestore) sem vazamento de listeners
 ========================================= */
 
 import { CAROUSEL_CONFIG } from './config.js';
@@ -8,6 +9,20 @@ import { openVideoModal } from './player.js';
 import { FALLBACK_THUMBNAIL_DATA_URI, getPublishedVideosByType } from './video-utils.js';
 
 const DRAG_THRESHOLD_PX = 6;
+
+let activeCleanups = [];
+let primaryTriggers = new Map();
+let controlsInitialized = false;
+let globallyPaused = false;
+let modalPaused = false;
+
+function cleanupPreviousTracks() {
+    activeCleanups.forEach((fn) => {
+        try { fn(); } catch {}
+    });
+    activeCleanups = [];
+    primaryTriggers = new Map();
+}
 
 function createPlayIconSvg() {
     const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
@@ -27,28 +42,32 @@ function buildShortAriaLabel(title) {
 function buildRowSequence(items, rowIndex) {
     if (!items.length) return [];
     if (rowIndex === 0) {
-        // Preserva a sequência original da faixa superior (4 únicos + 1 repetição visual)
-        const extra = items[2] || items[0];
-        return [
-            ...items.map((video) => ({ video, isAccessible: true })),
-            { video: extra, isAccessible: false },
-        ];
+        const list = items.map((video) => ({ video, isAccessible: true }));
+        // Completa para pelo menos 5 cards visuais na faixa, marcando preenchimento como decorativo
+        if (list.length < 5) {
+            const extra = items[2] || items[0];
+            list.push({ video: extra, isAccessible: false });
+        }
+        return list;
     }
 
-    // Preserva a sequência deslocada da faixa inferior (visual complementar; sem duplicar tab stops)
     const rotated = items.length > 1
         ? [items[items.length - 1], ...items.slice(0, items.length - 1)]
         : [...items];
-    const extra = rotated[1] || rotated[0];
-    return [
-        ...rotated.map((video) => ({ video, isAccessible: false })),
-        { video: extra, isAccessible: false },
-    ];
+    const list = rotated.map((video) => ({ video, isAccessible: false }));
+    if (list.length < 5) {
+        const extra = rotated[1] || rotated[0];
+        list.push({ video: extra, isAccessible: false });
+    }
+    return list;
 }
 
-function createShortCard(video, { isAccessible, primaryTriggers }) {
+function createShortCard(video, { isAccessible }) {
     const card = document.createElement('article');
     card.className = 'short__card';
+    if (video.featured) {
+        card.classList.add('short__card--featured');
+    }
     if (!isAccessible) {
         card.setAttribute('aria-hidden', 'true');
         card.dataset.carouselClone = 'true';
@@ -69,7 +88,6 @@ function createShortCard(video, { isAccessible, primaryTriggers }) {
     }
 
     trigger.addEventListener('click', () => {
-        // Para clones/repetições visuais, devolve o foco ao gatilho acessível correspondente
         const returnFocusTarget = isAccessible
             ? trigger
             : (primaryTriggers.get(video.id) || null);
@@ -126,33 +144,30 @@ function createShortCard(video, { isAccessible, primaryTriggers }) {
     return card;
 }
 
-export function initShortsCarousel(videoRecords) {
-    const rows = document.querySelectorAll('.shorts__carrossel');
-    if (!rows.length) return;
+function syncPauseButton() {
+    const pauseBtn = document.getElementById('shorts-toggle-motion');
+    if (!pauseBtn) return;
+    pauseBtn.setAttribute('aria-pressed', String(globallyPaused));
+    const labelEl = pauseBtn.querySelector('[data-shorts-pause-label]');
+    if (labelEl) {
+        labelEl.textContent = t(globallyPaused ? 'shorts.resume' : 'shorts.pause');
+    }
+}
 
-    const shortItems = getPublishedVideosByType(videoRecords, 'short');
-    const primaryTriggers = new Map();
+function syncAccessibleLabels() {
+    primaryTriggers.forEach((btn) => {
+        btn.setAttribute('aria-label', buildShortAriaLabel(btn.dataset.videoTitle));
+    });
+}
+
+function ensureGlobalControls() {
+    if (controlsInitialized) return;
+    controlsInitialized = true;
 
     const motionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
-    let globallyPaused = motionQuery.matches;
-    let modalPaused = false;
+    globallyPaused = motionQuery.matches;
 
     const pauseBtn = document.getElementById('shorts-toggle-motion');
-    const syncPauseButton = () => {
-        if (!pauseBtn) return;
-        pauseBtn.setAttribute('aria-pressed', String(globallyPaused));
-        const labelEl = pauseBtn.querySelector('[data-shorts-pause-label]');
-        if (labelEl) {
-            labelEl.textContent = t(globallyPaused ? 'shorts.resume' : 'shorts.pause');
-        }
-    };
-
-    const syncAccessibleLabels = () => {
-        primaryTriggers.forEach((btn) => {
-            btn.setAttribute('aria-label', buildShortAriaLabel(btn.dataset.videoTitle));
-        });
-    };
-
     if (pauseBtn) {
         pauseBtn.addEventListener('click', () => {
             globallyPaused = !globallyPaused;
@@ -175,8 +190,73 @@ export function initShortsCarousel(videoRecords) {
     });
 
     syncPauseButton();
+}
 
-    if (!shortItems.length) return;
+function setShortsStateMessage(key, { isError = false, onRetry = null } = {}) {
+    const stateHost = document.getElementById('shorts-state');
+    const viewport = document.querySelector('.shorts__carrossel__viewport');
+    const controls = document.querySelector('.shorts__controles');
+
+    if (!stateHost) return;
+    stateHost.replaceChildren();
+
+    if (!key) {
+        stateHost.hidden = true;
+        if (viewport) viewport.hidden = false;
+        if (controls) controls.hidden = false;
+        return;
+    }
+
+    stateHost.hidden = false;
+    if (viewport) viewport.hidden = true;
+    if (controls) controls.hidden = true;
+
+    const box = document.createElement('div');
+    box.className = isError ? 'section__state section__state--error' : 'section__state';
+    box.setAttribute('role', 'status');
+
+    const msg = document.createElement('p');
+    msg.setAttribute('data-i18n', key);
+    msg.textContent = t(key);
+    box.appendChild(msg);
+
+    if (typeof onRetry === 'function') {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn btn--secundario';
+        btn.setAttribute('data-i18n', 'portfolio.retry');
+        btn.textContent = t('portfolio.retry');
+        btn.addEventListener('click', onRetry);
+        box.appendChild(btn);
+    }
+
+    stateHost.appendChild(box);
+}
+
+export function renderShortsLoading() {
+    cleanupPreviousTracks();
+    setShortsStateMessage('shorts.loading');
+}
+
+export function renderShortsError(onRetry) {
+    cleanupPreviousTracks();
+    setShortsStateMessage('shorts.error', { isError: true, onRetry });
+}
+
+export function initShortsCarousel(videoRecords) {
+    ensureGlobalControls();
+    cleanupPreviousTracks();
+
+    const rows = document.querySelectorAll('.shorts__carrossel');
+    if (!rows.length) return;
+
+    const shortItems = getPublishedVideosByType(videoRecords, 'short');
+    if (!shortItems.length) {
+        setShortsStateMessage('shorts.empty');
+        return;
+    }
+
+    setShortsStateMessage(null);
 
     rows.forEach((row, rowIndex) => {
         const fita = row.querySelector('.shorts__fita');
@@ -186,20 +266,17 @@ export function initShortsCarousel(videoRecords) {
 
         const sequence = buildRowSequence(shortItems, rowIndex);
         const origCards = sequence.map(({ video, isAccessible }) =>
-            createShortCard(video, { isAccessible, primaryTriggers })
+            createShortCard(video, { isAccessible })
         );
 
-        // Adiciona os cards originais da faixa
         origCards.forEach((card) => fita.appendChild(card));
 
-        // Adiciona clones para loop contínuo (invisíveis à árvore de acessibilidade e fora da ordem de Tab)
+        // Clones para loop contínuo (ocultos para leitores de tela e fora do foco por teclado)
         sequence.forEach(({ video }) => {
-            const cloneCard = createShortCard(video, { isAccessible: false, primaryTriggers });
+            const cloneCard = createShortCard(video, { isAccessible: false });
             fita.appendChild(cloneCard);
         });
 
-        // direction: 'left' => desloca conteúdo para esquerda (offset cresce)
-        //            'right' => desloca conteúdo para direita (offset decresce)
         const direction = row.dataset.direction === 'right' ? -1 : 1;
 
         let cachedSetW = 0;
@@ -215,8 +292,9 @@ export function initShortsCarousel(videoRecords) {
 
         measureSetWidth();
 
+        let ro = null;
         if ('ResizeObserver' in window) {
-            const ro = new ResizeObserver(measureSetWidth);
+            ro = new ResizeObserver(measureSetWidth);
             ro.observe(fita);
         } else {
             window.addEventListener('resize', measureSetWidth);
@@ -230,8 +308,11 @@ export function initShortsCarousel(videoRecords) {
         let suppressNextClick = false;
         let dragStartX = 0;
         let dragStartOffset = 0;
+        let rafId = 0;
+        let disposed = false;
 
         const loop = (ts) => {
+            if (disposed) return;
             if (lastTime === null) lastTime = ts;
             const dt = Math.min((ts - lastTime) / 1000, CAROUSEL_CONFIG.maxDeltaSec);
             lastTime = ts;
@@ -245,43 +326,29 @@ export function initShortsCarousel(videoRecords) {
                 fita.style.transform = `translate3d(${-offset}px, 0, 0)`;
             }
 
-            requestAnimationFrame(loop);
+            rafId = requestAnimationFrame(loop);
         };
 
-        requestAnimationFrame(loop);
+        rafId = requestAnimationFrame(loop);
 
-        // Impede que arrastar o carrossel dispare clique acidental no card
-        row.addEventListener(
-            'click',
-            (e) => {
-                if (suppressNextClick) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    suppressNextClick = false;
-                }
-            },
-            true
-        );
-
-        // Hover pause/resume
-        row.addEventListener('mouseenter', () => {
-            hoverPaused = true;
-        });
-        row.addEventListener('mouseleave', () => {
-            if (!pointerDown) hoverPaused = false;
-        });
-
-        // Mouse drag
-        row.addEventListener('mousedown', (e) => {
+        const onClickCapture = (e) => {
+            if (suppressNextClick) {
+                e.preventDefault();
+                e.stopPropagation();
+                suppressNextClick = false;
+            }
+        };
+        const onMouseEnter = () => { hoverPaused = true; };
+        const onMouseLeave = () => { if (!pointerDown) hoverPaused = false; };
+        const onMouseDown = (e) => {
             if (e.button !== 0) return;
             pointerDown = true;
             isDragging = false;
             suppressNextClick = false;
             dragStartX = e.clientX;
             dragStartOffset = offset;
-        });
-
-        window.addEventListener('mousemove', (e) => {
+        };
+        const onMouseMove = (e) => {
             if (!pointerDown) return;
             const dx = dragStartX - e.clientX;
             if (!isDragging && Math.abs(dx) > DRAG_THRESHOLD_PX) {
@@ -292,64 +359,73 @@ export function initShortsCarousel(videoRecords) {
             if (isDragging) {
                 offset = dragStartOffset + dx;
             }
-        });
-
-        window.addEventListener('mouseup', () => {
+        };
+        const onMouseUp = () => {
             if (!pointerDown) return;
             pointerDown = false;
             if (isDragging) {
                 isDragging = false;
                 suppressNextClick = true;
                 row.classList.remove('dragging');
-                setTimeout(() => {
-                    suppressNextClick = false;
-                }, 0);
+                setTimeout(() => { suppressNextClick = false; }, 0);
             }
             hoverPaused = false;
             lastTime = null;
-        });
-
-        // Touch drag
-        row.addEventListener(
-            'touchstart',
-            (e) => {
-                pointerDown = true;
-                isDragging = false;
-                suppressNextClick = false;
-                hoverPaused = true;
-                dragStartX = e.touches[0].clientX;
-                dragStartOffset = offset;
-            },
-            { passive: true }
-        );
-
-        row.addEventListener(
-            'touchmove',
-            (e) => {
-                if (!pointerDown) return;
-                const dx = dragStartX - e.touches[0].clientX;
-                if (!isDragging && Math.abs(dx) > DRAG_THRESHOLD_PX) {
-                    isDragging = true;
-                }
-                if (isDragging) {
-                    offset = dragStartOffset + dx;
-                }
-            },
-            { passive: true }
-        );
-
-        row.addEventListener('touchend', () => {
+        };
+        const onTouchStart = (e) => {
+            pointerDown = true;
+            isDragging = false;
+            suppressNextClick = false;
+            hoverPaused = true;
+            dragStartX = e.touches[0].clientX;
+            dragStartOffset = offset;
+        };
+        const onTouchMove = (e) => {
+            if (!pointerDown) return;
+            const dx = dragStartX - e.touches[0].clientX;
+            if (!isDragging && Math.abs(dx) > DRAG_THRESHOLD_PX) {
+                isDragging = true;
+            }
+            if (isDragging) {
+                offset = dragStartOffset + dx;
+            }
+        };
+        const onTouchEnd = () => {
             if (!pointerDown) return;
             pointerDown = false;
             if (isDragging) {
                 isDragging = false;
                 suppressNextClick = true;
-                setTimeout(() => {
-                    suppressNextClick = false;
-                }, 50);
+                setTimeout(() => { suppressNextClick = false; }, 50);
             }
             hoverPaused = false;
             lastTime = null;
+        };
+
+        row.addEventListener('click', onClickCapture, true);
+        row.addEventListener('mouseenter', onMouseEnter);
+        row.addEventListener('mouseleave', onMouseLeave);
+        row.addEventListener('mousedown', onMouseDown);
+        window.addEventListener('mousemove', onMouseMove);
+        window.addEventListener('mouseup', onMouseUp);
+        row.addEventListener('touchstart', onTouchStart, { passive: true });
+        row.addEventListener('touchmove', onTouchMove, { passive: true });
+        row.addEventListener('touchend', onTouchEnd);
+
+        activeCleanups.push(() => {
+            disposed = true;
+            cancelAnimationFrame(rafId);
+            if (ro) ro.disconnect();
+            else window.removeEventListener('resize', measureSetWidth);
+            row.removeEventListener('click', onClickCapture, true);
+            row.removeEventListener('mouseenter', onMouseEnter);
+            row.removeEventListener('mouseleave', onMouseLeave);
+            row.removeEventListener('mousedown', onMouseDown);
+            window.removeEventListener('mousemove', onMouseMove);
+            window.removeEventListener('mouseup', onMouseUp);
+            row.removeEventListener('touchstart', onTouchStart);
+            row.removeEventListener('touchmove', onTouchMove);
+            row.removeEventListener('touchend', onTouchEnd);
         });
     });
 }

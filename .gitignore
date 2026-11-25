@@ -20,6 +20,9 @@ npm-debug.log*
 *serviceAccount*.json
 *firebase-adminsdk*.json
 
+# Pacotes e arquivos compactados locais
+*.zip
+
 # Firebase Emulators & Cache
 .firebase/
 firebase-debug.log

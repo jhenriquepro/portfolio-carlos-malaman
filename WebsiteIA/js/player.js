@@ -15,7 +15,7 @@ const FOCUSABLE_SELECTOR = [
     '[tabindex]:not([tabindex="-1"])',
 ].join(', ');
 
-const BACKGROUND_REGIONS_SELECTOR = 'header, main, footer';
+const BACKGROUND_REGIONS_SELECTOR = 'header, main, footer, .timeline-nav';
 
 let modalRoot = null;
 let dialogEl = null;
@@ -33,7 +33,7 @@ let previousOverflow = '';
 function getFocusableInModal() {
     if (!dialogEl) return [];
     return Array.from(dialogEl.querySelectorAll(FOCUSABLE_SELECTOR)).filter(
-        (el) => !el.hasAttribute('disabled') && el.getAttribute('aria-hidden') !== 'true'
+        (el) => !el.hasAttribute('disabled') && !el.hidden && el.getAttribute('aria-hidden') !== 'true'
     );
 }
 
@@ -57,7 +57,16 @@ function syncModalTranslations() {
         closeBtn.title = closeLabel;
     }
     if (externalLabelEl) {
-        externalLabelEl.textContent = t('player.watchExternal');
+        const key = activeVideo && !activeVideo.embeddable ? 'player.openExternal' : 'player.watchExternal';
+        externalLabelEl.textContent = t(key);
+    }
+    const notice = stageEl?.querySelector('[data-modal-external-notice]');
+    if (notice) {
+        notice.textContent = t('player.externalNotice');
+    }
+    const ctaText = stageEl?.querySelector('[data-modal-external-cta]');
+    if (ctaText) {
+        ctaText.textContent = t('player.openExternal');
     }
 }
 
@@ -80,6 +89,38 @@ function createIframeElement(video) {
     iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
     iframe.allowFullscreen = true;
     return iframe;
+}
+
+function createExternalFallbackElement(video) {
+    const box = document.createElement('div');
+    box.className = 'video-modal__fallback';
+
+    const badge = document.createElement('span');
+    badge.className = 'video-modal__fallback__badge';
+    badge.textContent = video.badge || video.platform;
+
+    const msg = document.createElement('p');
+    msg.className = 'video-modal__fallback__text';
+    msg.setAttribute('data-modal-external-notice', '');
+    msg.textContent = t('player.externalNotice');
+
+    box.append(badge, msg);
+
+    if (video.watchUrl) {
+        const link = document.createElement('a');
+        link.className = 'btn btn--primario';
+        link.href = video.watchUrl;
+        link.target = '_blank';
+        link.rel = 'noopener noreferrer';
+
+        const label = document.createElement('span');
+        label.setAttribute('data-modal-external-cta', '');
+        label.textContent = t('player.openExternal');
+        link.appendChild(label);
+        box.appendChild(link);
+    }
+
+    return box;
 }
 
 function handleKeyDown(e) {
@@ -246,10 +287,18 @@ export function openVideoModal(video, triggerElement = null) {
         externalLinkEl.hidden = true;
     }
 
+    syncModalTranslations();
     stageEl.replaceChildren();
-    const iframe = createIframeElement(video);
-    if (iframe) {
-        stageEl.appendChild(iframe);
+
+    if (video.embeddable !== false) {
+        const iframe = createIframeElement(video);
+        if (iframe) {
+            stageEl.appendChild(iframe);
+        } else {
+            stageEl.appendChild(createExternalFallbackElement(video));
+        }
+    } else {
+        stageEl.appendChild(createExternalFallbackElement(video));
     }
 
     previousOverflow = document.body.style.overflow;
@@ -257,7 +306,6 @@ export function openVideoModal(video, triggerElement = null) {
     setBackgroundInert(true);
 
     modalRoot.hidden = false;
-    // Garante transição suave após remover hidden
     requestAnimationFrame(() => {
         if (modalRoot) modalRoot.classList.add('video-modal--aberto');
     });
@@ -271,7 +319,7 @@ export function openVideoModal(video, triggerElement = null) {
 export function closeVideoModal() {
     if (!isOpen || !modalRoot) return;
 
-    // Remove o iframe imediatamente para interromper qualquer reprodução
+    // Destrói o iframe imediatamente para interromper reprodução
     if (stageEl) {
         stageEl.replaceChildren();
     }

@@ -1,9 +1,13 @@
 /* =========================================
-   NAVIGATION.JS — Header, Menu Mobile, Scroll Nav e Reveal
+   NAVIGATION.JS — Header, Menu Mobile, Timeline Bar, Scroll Nav e Reveal
 ========================================= */
 
-import { BREAKPOINTS, SECTION_SELECTORS } from './config.js';
+import { BREAKPOINTS } from './config.js';
 import { t } from './i18n.js';
+
+const ALL_SECTION_IDS = ['#apresentacao', '#clientes', '#portfolio', '#shorts', '#contatos'];
+
+let revealObserver = null;
 
 function prefersReducedMotion() {
     return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -14,7 +18,14 @@ function getScrollBehavior() {
 }
 
 function getHeaderHeight() {
-    return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'), 10) || 64;
+    return parseInt(getComputedStyle(document.documentElement).getPropertyValue('--header-h'), 10) || 68;
+}
+
+function getActiveSectionSelectors() {
+    return ALL_SECTION_IDS.filter((sel) => {
+        const el = document.querySelector(sel);
+        return Boolean(el && !el.hidden);
+    });
 }
 
 export function initNavigation() {
@@ -22,11 +33,14 @@ export function initNavigation() {
     const scrollPrev = document.getElementById('scroll-prev');
     const scrollNext = document.getElementById('scroll-next');
     const btnTopoMobile = document.getElementById('btn-topo-mobile');
+    const timelinePlayhead = document.getElementById('timeline-playhead');
+    const timelineLinks = Array.from(document.querySelectorAll('.timeline-nav__segment'));
+    const headerLinks = Array.from(document.querySelectorAll('.cabecalho__menu__link'));
 
-    const getCurrentSectionIndex = () => {
-        const midpoint = window.scrollY + window.innerHeight / 2;
+    const getCurrentSectionIndex = (selectors) => {
+        const midpoint = window.scrollY + window.innerHeight * 0.45;
         let current = 0;
-        SECTION_SELECTORS.forEach((selector, idx) => {
+        selectors.forEach((selector, idx) => {
             const el = document.querySelector(selector);
             if (el && el.getBoundingClientRect().top + window.scrollY <= midpoint) {
                 current = idx;
@@ -36,11 +50,13 @@ export function initNavigation() {
     };
 
     const scrollToSection = (index) => {
-        const clamped = Math.max(0, Math.min(SECTION_SELECTORS.length - 1, index));
-        const target = document.querySelector(SECTION_SELECTORS[clamped]);
+        const selectors = getActiveSectionSelectors();
+        if (!selectors.length) return;
+        const clamped = Math.max(0, Math.min(selectors.length - 1, index));
+        const target = document.querySelector(selectors[clamped]);
         if (!target) return;
         const y = target.getBoundingClientRect().top + window.scrollY - getHeaderHeight();
-        window.scrollTo({ top: y, behavior: getScrollBehavior() });
+        window.scrollTo({ top: Math.max(0, y), behavior: getScrollBehavior() });
     };
 
     let scrollTicking = false;
@@ -51,12 +67,37 @@ export function initNavigation() {
             cabecalho.classList.toggle('scrollado', window.scrollY > 20);
         }
 
-        const idx = getCurrentSectionIndex();
+        const selectors = getActiveSectionSelectors();
+        const idx = getCurrentSectionIndex(selectors);
+        const activeSelector = selectors[idx] || '#apresentacao';
+
         if (scrollPrev) {
+            scrollPrev.disabled = idx <= 0;
             scrollPrev.classList.toggle('visivel', idx > 0);
         }
         if (scrollNext) {
-            scrollNext.classList.toggle('visivel', idx < SECTION_SELECTORS.length - 1);
+            scrollNext.disabled = idx >= selectors.length - 1;
+            scrollNext.classList.toggle('visivel', idx < selectors.length - 1);
+        }
+
+        headerLinks.forEach((link) => {
+            const isCurrent = link.getAttribute('href') === activeSelector;
+            link.classList.toggle('ativo', isCurrent);
+            if (isCurrent) link.setAttribute('aria-current', 'location');
+            else link.removeAttribute('aria-current');
+        });
+
+        timelineLinks.forEach((seg) => {
+            const isCurrent = seg.getAttribute('href') === activeSelector;
+            seg.classList.toggle('ativo', isCurrent);
+            if (isCurrent) seg.setAttribute('aria-current', 'location');
+            else seg.removeAttribute('aria-current');
+        });
+
+        if (timelinePlayhead) {
+            const maxScroll = Math.max(1, document.documentElement.scrollHeight - window.innerHeight);
+            const pct = Math.max(0, Math.min(100, (window.scrollY / maxScroll) * 100));
+            timelinePlayhead.style.left = `${pct}%`;
         }
     };
 
@@ -68,13 +109,20 @@ export function initNavigation() {
     };
 
     window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
     syncScrollState();
 
     if (scrollPrev) {
-        scrollPrev.addEventListener('click', () => scrollToSection(getCurrentSectionIndex() - 1));
+        scrollPrev.addEventListener('click', () => {
+            const selectors = getActiveSectionSelectors();
+            scrollToSection(getCurrentSectionIndex(selectors) - 1);
+        });
     }
     if (scrollNext) {
-        scrollNext.addEventListener('click', () => scrollToSection(getCurrentSectionIndex() + 1));
+        scrollNext.addEventListener('click', () => {
+            const selectors = getActiveSectionSelectors();
+            scrollToSection(getCurrentSectionIndex(selectors) + 1);
+        });
     }
 
     if (btnTopoMobile) {
@@ -89,11 +137,11 @@ export function initNavigation() {
             const href = anchor.getAttribute('href');
             if (!href || href === '#') return;
             const target = document.querySelector(href);
-            if (!target) return;
+            if (!target || target.hidden) return;
 
             e.preventDefault();
             const y = target.getBoundingClientRect().top + window.scrollY - getHeaderHeight();
-            window.scrollTo({ top: y, behavior: getScrollBehavior() });
+            window.scrollTo({ top: Math.max(0, y), behavior: getScrollBehavior() });
         });
     });
 
@@ -145,29 +193,35 @@ export function initNavigation() {
     }
 }
 
-export function initReveal() {
-    const elementsReveal = document.querySelectorAll('.reveal');
-    if (!elementsReveal.length) return;
+export function observeReveals(root = document) {
+    const targets = root.querySelectorAll('.reveal:not(.visivel)');
+    if (!targets.length) return;
 
     if (prefersReducedMotion() || !('IntersectionObserver' in window)) {
-        elementsReveal.forEach((el) => el.classList.add('visivel'));
+        targets.forEach((el) => el.classList.add('visivel'));
         return;
     }
 
-    const observer = new IntersectionObserver(
-        (entries) => {
-            entries.forEach((entry) => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('visivel');
-                    observer.unobserve(entry.target);
-                }
-            });
-        },
-        {
-            threshold: 0.12,
-            rootMargin: '0px 0px -40px 0px',
-        }
-    );
+    if (!revealObserver) {
+        revealObserver = new IntersectionObserver(
+            (entries) => {
+                entries.forEach((entry) => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visivel');
+                        revealObserver.unobserve(entry.target);
+                    }
+                });
+            },
+            {
+                threshold: 0.1,
+                rootMargin: '0px 0px -30px 0px',
+            }
+        );
+    }
 
-    elementsReveal.forEach((el) => observer.observe(el));
+    targets.forEach((el) => revealObserver.observe(el));
+}
+
+export function initReveal() {
+    observeReveals(document);
 }

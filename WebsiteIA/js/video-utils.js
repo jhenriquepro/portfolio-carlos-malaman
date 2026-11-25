@@ -3,6 +3,8 @@
 ========================================= */
 
 const YOUTUBE_ID_PATTERN = /^[A-Za-z0-9_-]{11}$/;
+const INSTAGRAM_SHORTCODE_PATTERN = /^[A-Za-z0-9_-]{5,40}$/;
+const TIKTOK_VIDEO_ID_PATTERN = /^\d{6,30}$/;
 
 const ALLOWED_YOUTUBE_HOSTS = new Set([
     'youtube.com',
@@ -13,21 +15,34 @@ const ALLOWED_YOUTUBE_HOSTS = new Set([
     'www.youtube-nocookie.com',
 ]);
 
+const ALLOWED_INSTAGRAM_HOSTS = new Set([
+    'instagram.com',
+    'www.instagram.com',
+    'm.instagram.com',
+]);
+
+const ALLOWED_TIKTOK_HOSTS = new Set([
+    'tiktok.com',
+    'www.tiktok.com',
+    'm.tiktok.com',
+]);
+
 const ALLOWED_THUMB_HOSTS = new Set([
     'i.ytimg.com',
     'img.youtube.com',
 ]);
 
 const ALLOWED_TYPES = new Set(['portfolio', 'short']);
-const ALLOWED_PLATFORMS = new Set(['youtube']);
+const ALLOWED_PLATFORMS = new Set(['youtube', 'instagram', 'tiktok']);
 
 export const FALLBACK_THUMBNAIL_DATA_URI =
     'data:image/svg+xml,' +
     encodeURIComponent(
         '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 270">' +
-        '<rect width="480" height="270" fill="#171738"/>' +
-        '<circle cx="240" cy="135" r="34" fill="#3423A6" opacity="0.85"/>' +
-        '<polygon points="230,119 260,135 230,151" fill="#DFF3E4"/>' +
+        '<rect width="480" height="270" fill="#150E21"/>' +
+        '<rect x="1" y="1" width="478" height="268" fill="none" stroke="#7134AD" stroke-opacity="0.35" stroke-width="2"/>' +
+        '<circle cx="240" cy="135" r="34" fill="#7134AD" opacity="0.9"/>' +
+        '<polygon points="230,119 260,135 230,151" fill="#F6F2FA"/>' +
         '</svg>'
     );
 
@@ -35,9 +50,21 @@ export function isValidYouTubeId(value) {
     return typeof value === 'string' && YOUTUBE_ID_PATTERN.test(value.trim());
 }
 
+export function isSafeHttpsUrl(rawUrl) {
+    if (typeof rawUrl !== 'string') return false;
+    const trimmed = rawUrl.trim();
+    if (!trimmed || /[<>]/.test(trimmed)) return false;
+    try {
+        const parsed = new URL(trimmed);
+        return parsed.protocol === 'https:';
+    } catch {
+        return false;
+    }
+}
+
 export function parseStartSeconds(rawValue) {
     if (typeof rawValue === 'number' && Number.isFinite(rawValue) && rawValue >= 0) {
-        return Math.floor(rawValue);
+        return Math.min(86400, Math.floor(rawValue));
     }
 
     if (typeof rawValue !== 'string') return 0;
@@ -45,7 +72,16 @@ export function parseStartSeconds(rawValue) {
     if (!trimmed) return 0;
 
     if (/^\d+s?$/.test(trimmed)) {
-        return parseInt(trimmed, 10);
+        return Math.min(86400, parseInt(trimmed, 10));
+    }
+
+    // Suporta formatos "3:19", "1:02:10"
+    if (/^\d{1,2}(:\d{2}){1,2}$/.test(trimmed)) {
+        const parts = trimmed.split(':').map((n) => parseInt(n, 10));
+        const total = parts.length === 3
+            ? parts[0] * 3600 + parts[1] * 60 + parts[2]
+            : parts[0] * 60 + parts[1];
+        return Math.min(86400, total);
     }
 
     // Suporta formatos como "1h2m3s" ou "3m19s"
@@ -55,24 +91,27 @@ export function parseStartSeconds(rawValue) {
     const hours = parseInt(match[1] || '0', 10);
     const minutes = parseInt(match[2] || '0', 10);
     const seconds = parseInt(match[3] || '0', 10);
-    return hours * 3600 + minutes * 60 + seconds;
+    return Math.min(86400, hours * 3600 + minutes * 60 + seconds);
+}
+
+export function parseDurationInput(rawValue) {
+    if (rawValue === null || rawValue === undefined || rawValue === '') return null;
+    if (typeof rawValue === 'number') {
+        return Number.isFinite(rawValue) && rawValue > 0 ? Math.min(86400, Math.floor(rawValue)) : null;
+    }
+    const parsed = parseStartSeconds(String(rawValue));
+    return parsed > 0 ? parsed : null;
 }
 
 export function parseYouTubeUrl(rawUrl) {
-    if (typeof rawUrl !== 'string') return null;
-
-    const trimmed = rawUrl.trim();
-    // Rejeita HTML arbitrário ou tags embutidas
-    if (!trimmed || /[<>]/.test(trimmed)) return null;
+    if (!isSafeHttpsUrl(rawUrl)) return null;
 
     let parsed;
     try {
-        parsed = new URL(trimmed);
+        parsed = new URL(rawUrl.trim());
     } catch {
         return null;
     }
-
-    if (parsed.protocol !== 'https:') return null;
 
     const host = parsed.hostname.toLowerCase();
     if (!ALLOWED_YOUTUBE_HOSTS.has(host)) return null;
@@ -98,7 +137,65 @@ export function parseYouTubeUrl(rawUrl) {
         externalId,
         startSeconds,
         isShortUrl: segments[0] === 'shorts',
+        embeddable: true,
+        canonicalUrl: buildYouTubeWatchUrl(externalId, {
+            startSeconds,
+            type: segments[0] === 'shorts' ? 'short' : 'portfolio',
+        }),
     };
+}
+
+export function parseVideoUrl(rawUrl) {
+    const yt = parseYouTubeUrl(rawUrl);
+    if (yt) return yt;
+
+    if (!isSafeHttpsUrl(rawUrl)) return null;
+
+    let parsed;
+    try {
+        parsed = new URL(rawUrl.trim());
+    } catch {
+        return null;
+    }
+
+    const host = parsed.hostname.toLowerCase();
+    const segments = parsed.pathname.split('/').filter(Boolean);
+
+    // Instagram Reel / Post (link externo validado; sem embed garantido)
+    if (ALLOWED_INSTAGRAM_HOSTS.has(host)) {
+        const kind = segments[0];
+        const code = segments[1];
+        if ((kind === 'reel' || kind === 'reels' || kind === 'p') && code && INSTAGRAM_SHORTCODE_PATTERN.test(code)) {
+            return {
+                platform: 'instagram',
+                externalId: code,
+                startSeconds: 0,
+                isShortUrl: true,
+                embeddable: false,
+                canonicalUrl: `https://www.instagram.com/${kind === 'p' ? 'p' : 'reel'}/${code}/`,
+            };
+        }
+        return null;
+    }
+
+    // TikTok Video (link externo validado; sem embed garantido)
+    if (ALLOWED_TIKTOK_HOSTS.has(host)) {
+        const videoIdx = segments.indexOf('video');
+        const videoId = videoIdx >= 0 ? segments[videoIdx + 1] : null;
+        if (videoId && TIKTOK_VIDEO_ID_PATTERN.test(videoId)) {
+            return {
+                platform: 'tiktok',
+                externalId: videoId,
+                startSeconds: 0,
+                isShortUrl: true,
+                embeddable: false,
+                canonicalUrl: parsed.origin + parsed.pathname,
+            };
+        }
+        return null;
+    }
+
+    return null;
 }
 
 export function buildYouTubeThumbnailUrl(externalId, quality = 'hqdefault') {
@@ -144,10 +241,9 @@ export function buildYouTubeWatchUrl(externalId, { startSeconds = 0, type = 'por
 }
 
 function sanitizeOptionalThumbnailUrl(rawUrl) {
-    if (typeof rawUrl !== 'string' || !rawUrl.trim()) return null;
+    if (!isSafeHttpsUrl(rawUrl)) return null;
     try {
         const parsed = new URL(rawUrl.trim());
-        if (parsed.protocol !== 'https:') return null;
         if (!ALLOWED_THUMB_HOSTS.has(parsed.hostname.toLowerCase())) return null;
         return parsed.toString();
     } catch {
@@ -167,57 +263,79 @@ export function formatDuration(seconds) {
     return hrs > 0 ? `${hrs}:${pad(mins)}:${pad(secs)}` : `${mins}:${pad(secs)}`;
 }
 
+function getDefaultBadge(platform, type) {
+    if (platform === 'instagram') return 'Reel';
+    if (platform === 'tiktok') return 'TikTok';
+    return type === 'short' ? 'Short' : 'YouTube';
+}
+
 export function normalizeVideoRecord(raw) {
     if (!raw || typeof raw !== 'object') return null;
 
     const type = ALLOWED_TYPES.has(raw.type) ? raw.type : null;
-    const platform = ALLOWED_PLATFORMS.has(raw.platform) ? raw.platform : 'youtube';
     if (!type) return null;
 
-    const parsedUrl = parseYouTubeUrl(raw.sourceUrl);
-    const externalId = parsedUrl?.externalId || (isValidYouTubeId(raw.externalId) ? raw.externalId.trim() : null);
+    const parsedUrl = parseVideoUrl(raw.sourceUrl);
+    const platform = parsedUrl?.platform || (ALLOWED_PLATFORMS.has(raw.platform) ? raw.platform : 'youtube');
+
+    let externalId = parsedUrl?.externalId || null;
+    if (!externalId && platform === 'youtube' && isValidYouTubeId(raw.externalId)) {
+        externalId = raw.externalId.trim();
+    }
     if (!externalId) return null;
 
-    const startSeconds = Math.max(
-        parseStartSeconds(raw.startSeconds),
-        parsedUrl?.startSeconds || 0
-    );
+    const startSeconds = platform === 'youtube'
+        ? Math.max(parseStartSeconds(raw.startSeconds), parsedUrl?.startSeconds || 0)
+        : 0;
 
-    const title = typeof raw.title === 'string' ? raw.title.trim() : '';
+    const title = typeof raw.title === 'string' ? raw.title.trim().slice(0, 120) : '';
     if (!title) return null;
 
     const fullTitle = typeof raw.fullTitle === 'string' && raw.fullTitle.trim()
-        ? raw.fullTitle.trim()
+        ? raw.fullTitle.trim().slice(0, 180)
         : title;
 
     const badge = typeof raw.badge === 'string' && raw.badge.trim()
-        ? raw.badge.trim()
-        : (type === 'short' ? 'Short' : 'YouTube');
+        ? raw.badge.trim().slice(0, 30)
+        : getDefaultBadge(platform, type);
 
     const tools = Array.isArray(raw.tools)
-        ? raw.tools.filter((item) => typeof item === 'string' && item.trim()).map((item) => item.trim())
+        ? raw.tools
+            .filter((item) => typeof item === 'string' && item.trim())
+            .map((item) => item.trim().slice(0, 40))
+            .slice(0, 8)
         : [];
 
     const customThumb = sanitizeOptionalThumbnailUrl(raw.thumbnailUrl);
+    const thumbnailUrl = customThumb
+        || (platform === 'youtube' ? buildYouTubeThumbnailUrl(externalId, 'hqdefault') : FALLBACK_THUMBNAIL_DATA_URI);
+
+    const watchUrl = platform === 'youtube'
+        ? buildYouTubeWatchUrl(externalId, { startSeconds, type })
+        : (parsedUrl?.canonicalUrl || null);
+
+    const embeddable = platform === 'youtube';
 
     return Object.freeze({
         id: typeof raw.id === 'string' && raw.id.trim() ? raw.id.trim() : `${type}-${externalId}`,
         type,
         platform,
+        sourceUrl: watchUrl || raw.sourceUrl,
         externalId,
         title,
         fullTitle,
         badge,
         startSeconds,
-        durationSeconds: typeof raw.durationSeconds === 'number' && raw.durationSeconds > 0
-            ? Math.floor(raw.durationSeconds)
-            : null,
+        durationSeconds: parseDurationInput(raw.durationSeconds),
         tools,
         featured: Boolean(raw.featured),
-        sortOrder: typeof raw.sortOrder === 'number' && Number.isFinite(raw.sortOrder) ? raw.sortOrder : 999,
+        sortOrder: typeof raw.sortOrder === 'number' && Number.isFinite(raw.sortOrder)
+            ? Math.max(0, Math.min(9999, Math.floor(raw.sortOrder)))
+            : 999,
         published: raw.published !== false,
-        thumbnailUrl: customThumb || buildYouTubeThumbnailUrl(externalId, 'hqdefault'),
-        watchUrl: buildYouTubeWatchUrl(externalId, { startSeconds, type }),
+        embeddable,
+        thumbnailUrl,
+        watchUrl,
     });
 }
 
