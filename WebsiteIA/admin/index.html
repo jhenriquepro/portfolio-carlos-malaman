@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex, nofollow">
+    <meta name="theme-color" content="#090710">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23090710'/%3E%3Crect x='2' y='2' width='60' height='60' rx='12' fill='none' stroke='%237134AD' stroke-width='4'/%3E%3Ctext x='50%25' y='54%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-weight='800' font-size='26' fill='%23FF9B32'%3ECM%3C/text%3E%3C/svg%3E">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Raleway:wght@600;700;800;900&family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/admin.css">
+    <title>Admin — Carlos Malaman Portfolio</title>
+</head>
+<body>
+    <header class="admin-header">
+        <div class="admin-header__inner">
+            <div class="admin-header__brand">
+                <a href="/" class="admin-brand__mark" aria-label="Carlos Malaman Portfolio">CM</a>
+                <div>
+                    <span class="admin-brand__title">Malaman Admin</span>
+                    <span class="admin-brand__sub" data-admin-i18n="header.subtitle">Video Management</span>
+                </div>
+            </div>
+
+            <div class="admin-header__actions">
+                <a href="/" class="admin-btn admin-btn--ghost" data-admin-i18n="header.viewSite">View Public Site</a>
+                <button type="button" class="admin-btn admin-btn--ghost" id="admin-lang-btn" aria-label="Switch language">EN / PT</button>
+                <button type="button" class="admin-btn admin-btn--danger" id="admin-logout-btn" hidden data-admin-i18n="header.signOut">Sign Out</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="admin-main">
+        <!-- STATUS LIVE REGION -->
+        <div class="admin-toast" id="admin-toast" role="status" aria-live="polite" hidden></div>
+
+        <!-- VIEW 0: LOADING -->
+        <section class="admin-center-card" id="view-loading">
+            <div class="admin-spinner" aria-hidden="true"></div>
+            <p data-admin-i18n="state.checkingSession">Checking session...</p>
+        </section>
+
+        <!-- VIEW 1: FIREBASE CONFIG PENDENTE -->
+        <section class="admin-center-card admin-center-card--wide" id="view-setup" hidden>
+            <span class="admin-badge admin-badge--amber" data-admin-i18n="setup.badge">Setup Required</span>
+            <h1 class="admin-heading" data-admin-i18n="setup.title">Firebase not configured yet</h1>
+            <p class="admin-muted" data-admin-i18n="setup.description">
+                Authentication and real-time video publishing require a Firebase project (Authentication Email/Password + Cloud Firestore).
+                No mock login or hardcoded password is enabled for security.
+            </p>
+            <div class="admin-setup-box">
+                <p><strong data-admin-i18n="setup.missingLabel">Missing public fields in <code>WebsiteIA/js/firebase.config.js</code>:</strong></p>
+                <ul id="setup-missing-list" class="admin-setup-list"></ul>
+                <ol class="admin-setup-steps">
+                    <li data-admin-i18n="setup.step1">Create a Firebase project and register a Web App to get the public config.</li>
+                    <li data-admin-i18n="setup.step2">Enable Email/Password sign-in and create the single editor account manually.</li>
+                    <li data-admin-i18n="setup.step3">Create the Cloud Firestore database and publish <code>firestore.rules</code> + <code>firestore.indexes.json</code>.</li>
+                    <li data-admin-i18n="setup.step4">Create document <code>admins/{EDITOR_UID}</code> manually in Firestore Console.</li>
+                    <li data-admin-i18n="setup.step5">Fill <code>WebsiteIA/js/firebase.config.js</code>, reload <code>/admin</code>, sign in, and click "Import Initial Videos".</li>
+                </ol>
+            </div>
+            <div class="admin-center-card__footer">
+                <a href="/" class="admin-btn admin-btn--primary" data-admin-i18n="setup.backHome">Back to Public Portfolio</a>
+            </div>
+        </section>
+
+        <!-- VIEW 2: LOGIN -->
+        <section class="admin-center-card" id="view-login" hidden>
+            <span class="admin-badge admin-badge--violet" data-admin-i18n="login.badge">Restricted Access</span>
+            <h1 class="admin-heading" data-admin-i18n="login.title">Editor Sign In</h1>
+            <p class="admin-muted" data-admin-i18n="login.subtitle">Sign in with your authorized Firebase account to manage portfolio videos and Shorts.</p>
+
+            <form class="admin-form" id="admin-login-form" novalidate>
+                <div class="admin-field">
+                    <label for="login-email" data-admin-i18n="login.emailLabel">Email</label>
+                    <input type="email" id="login-email" name="email" autocomplete="username" required placeholder="editor@example.com">
+                </div>
+                <div class="admin-field">
+                    <label for="login-password" data-admin-i18n="login.passwordLabel">Password</label>
+                    <input type="password" id="login-password" name="password" autocomplete="current-password" required placeholder="••••••••">
+                </div>
+
+                <p class="admin-error" id="login-error" role="alert" hidden></p>
+
+                <button type="submit" class="admin-btn admin-btn--primary admin-btn--full" id="login-submit-btn" data-admin-i18n="login.submit">
+                    Sign In
+                </button>
+            </form>
+        </section>
+
+        <!-- VIEW 3: AUTENTICADO MAS NÃO AUTORIZADO (UID FORA DE admins/{uid}) -->
+        <section class="admin-center-card" id="view-unauthorized" hidden>
+            <span class="admin-badge admin-badge--coral" data-admin-i18n="unauth.badge">Access Denied</span>
+            <h1 class="admin-heading" data-admin-i18n="unauth.title">Account not authorized</h1>
+            <p class="admin-muted" data-admin-i18n="unauth.description">
+                Your Firebase session is valid, but this UID is not listed in the Firestore <code>admins</code> collection. Drafts and write operations remain blocked by server rules.
+            </p>
+            <p class="admin-uid-box">
+                <span>UID:</span>
+                <code id="unauth-uid">—</code>
+            </p>
+            <button type="button" class="admin-btn admin-btn--danger" id="unauth-logout-btn" data-admin-i18n="header.signOut">Sign Out</button>
+        </section>
+
+        <!-- VIEW 4: PAINEL ADMINISTRATIVO -->
+        <section class="admin-dashboard" id="view-dashboard" hidden>
+            <div class="admin-topbar">
+                <div>
+                    <h1 class="admin-heading" data-admin-i18n="dash.title">Videos Manager</h1>
+                    <p class="admin-muted">
+                        <span data-admin-i18n="dash.signedAs">Signed in as</span>
+                        <strong id="dash-user-email">—</strong>
+                    </p>
+                </div>
+
+                <div class="admin-topbar__actions">
+                    <button type="button" class="admin-btn admin-btn--ghost" id="btn-import-initial" data-admin-i18n="dash.importInitial">
+                        Import Initial Videos (6 + 4)
+                    </button>
+                    <button type="button" class="admin-btn admin-btn--primary" id="btn-new-video" data-admin-i18n="dash.newVideo">
+                        + Add Video
+                    </button>
+                </div>
+            </div>
+
+            <!-- CONTADORES -->
+            <div class="admin-stats" aria-label="Summary">
+                <div class="admin-stat">
+                    <span class="admin-stat__num" id="stat-total">0</span>
+                    <span class="admin-stat__label" data-admin-i18n="stats.total">Total</span>
+                </div>
+                <div class="admin-stat">
+                    <span class="admin-stat__num admin-stat__num--amber" id="stat-published">0</span>
+                    <span class="admin-stat__label" data-admin-i18n="stats.published">Published</span>
+                </div>
+                <div class="admin-stat">
+                    <span class="admin-stat__num" id="stat-drafts">0</span>
+                    <span class="admin-stat__label" data-admin-i18n="stats.drafts">Drafts</span>
+                </div>
+                <div class="admin-stat">
+                    <span class="admin-stat__num" id="stat-portfolio">0</span>
+                    <span class="admin-stat__label" data-admin-i18n="stats.portfolio">Portfolio</span>
+                </div>
+                <div class="admin-stat">
+                    <span class="admin-stat__num admin-stat__num--coral" id="stat-shorts">0</span>
+                    <span class="admin-stat__label" data-admin-i18n="stats.shorts">Shorts</span>
+                </div>
+            </div>
+
+            <!-- LAYOUT PRINCIPAL: LISTA + FORMULÁRIO -->
+            <div class="admin-workspace">
+                <!-- COLUNA ESQUERDA: FILTROS E LISTA -->
+                <div class="admin-panel">
+                    <div class="admin-panel__head">
+                        <div class="admin-tabs" role="tablist" aria-label="Filter by type">
+                            <button type="button" class="admin-tab is-active" role="tab" aria-selected="true" data-filter="all" data-admin-i18n="filter.all">All</button>
+                            <button type="button" class="admin-tab" role="tab" aria-selected="false" data-filter="portfolio" data-admin-i18n="filter.portfolio">Portfolio</button>
+                            <button type="button" class="admin-tab" role="tab" aria-selected="false" data-filter="short" data-admin-i18n="filter.shorts">Shorts</button>
+                        </div>
+                        <span class="admin-hint" data-admin-i18n="dash.orderHint">Order is saved independently per type.</span>
+                    </div>
+
+                    <div id="videos-list-state" class="admin-empty" hidden></div>
+                    <div id="videos-list" class="admin-list"></div>
+                </div>
+
+                <!-- COLUNA DIREITA: FORMULÁRIO DE CADASTRO / EDIÇÃO + PRÉVIA -->
+                <aside class="admin-panel admin-panel--form" id="video-form-panel">
+                    <div class="admin-panel__head">
+                        <h2 class="admin-panel__title" id="form-heading" data-admin-i18n="form.newTitle">Add Video</h2>
+                        <button type="button" class="admin-btn admin-btn--ghost admin-btn--sm" id="btn-cancel-edit" hidden data-admin-i18n="form.cancel">Cancel</button>
+                    </div>
+
+                    <form class="admin-form" id="video-form" novalidate>
+                        <input type="hidden" id="field-id">
+
+                        <div class="admin-field">
+                            <label for="field-url" data-admin-i18n="form.urlLabel">Video URL (YouTube, Instagram or TikTok)</label>
+                            <input type="url" id="field-url" required placeholder="https://www.youtube.com/watch?v=...">
+                            <span class="admin-field__help" id="field-url-help" data-admin-i18n="form.urlHelp">Only validated HTTPS links. Arbitrary HTML/embed tags are blocked.</span>
+                            <span class="admin-field__error" id="err-url" role="alert"></span>
+                        </div>
+
+                        <div class="admin-row-2">
+                            <div class="admin-field">
+                                <label for="field-type" data-admin-i18n="form.typeLabel">Section</label>
+                                <select id="field-type">
+                                    <option value="portfolio" data-admin-i18n="filter.portfolio">Portfolio (16:9)</option>
+                                    <option value="short" data-admin-i18n="filter.shorts">Shorts / Reels (9:16)</option>
+                                </select>
+                            </div>
+
+                            <div class="admin-field">
+                                <label for="field-order" data-admin-i18n="form.orderLabel">Order</label>
+                                <input type="number" id="field-order" min="0" max="9999" value="1">
+                            </div>
+                        </div>
+
+                        <div class="admin-field">
+                            <label for="field-title" data-admin-i18n="form.titleLabel">Project Title</label>
+                            <input type="text" id="field-title" maxlength="120" required placeholder="e.g. Terraria">
+                            <span class="admin-field__error" id="err-title" role="alert"></span>
+                        </div>
+
+                        <div class="admin-row-2">
+                            <div class="admin-field">
+                                <label for="field-duration" data-admin-i18n="form.durationLabel">Duration (mm:ss or sec)</label>
+                                <input type="text" id="field-duration" placeholder="e.g. 12:40">
+                            </div>
+
+                            <div class="admin-field">
+                                <label for="field-start" data-admin-i18n="form.startLabel">Start Time (sec)</label>
+                                <input type="number" id="field-start" min="0" max="86400" value="0">
+                            </div>
+                        </div>
+
+                        <div class="admin-field">
+                            <span class="admin-label" data-admin-i18n="form.toolsLabel">Tools Used</span>
+                            <div class="admin-tools-grid" id="tools-checkboxes"></div>
+                            <input type="text" id="field-custom-tools" placeholder="Extra tools separated by comma (optional)">
+                        </div>
+
+                        <div class="admin-toggles">
+                            <label class="admin-switch">
+                                <input type="checkbox" id="field-published" checked>
+                                <span data-admin-i18n="form.publishedLabel">Published on public site</span>
+                            </label>
+                            <label class="admin-switch">
+                                <input type="checkbox" id="field-featured">
+                                <span data-admin-i18n="form.featuredLabel">Highlight as Featured</span>
+                            </label>
+                        </div>
+
+                        <!-- PRÉVIA ESTÁTICA SEGURA (sem execução automática de scripts/iframes) -->
+                        <div class="admin-preview" id="video-preview">
+                            <span class="admin-preview__label" data-admin-i18n="form.previewLabel">Live Card Preview</span>
+                            <div class="admin-preview__card" id="preview-card-mount"></div>
+                        </div>
+
+                        <p class="admin-error" id="form-error" role="alert" hidden></p>
+
+                        <div class="admin-form__actions">
+                            <button type="submit" class="admin-btn admin-btn--primary admin-btn--full" id="btn-save-video" data-admin-i18n="form.save">
+                                Save Video
+                            </button>
+                        </div>
+                    </form>
+                </aside>
+            </div>
+        </section>
+    </main>
+
+    <!-- MODAL DE CONFIRMAÇÃO DE EXCLUSÃO -->
+    <div class="admin-dialog-backdrop" id="confirm-dialog" role="dialog" aria-modal="true" aria-labelledby="confirm-title" hidden>
+        <div class="admin-dialog">
+            <h2 id="confirm-title" class="admin-dialog__title" data-admin-i18n="confirm.deleteTitle">Delete video?</h2>
+            <p class="admin-muted" id="confirm-message"></p>
+            <p class="admin-dialog__tip" data-admin-i18n="confirm.unpublishTip">Tip: you can unpublish instead to hide it safely without losing metadata.</p>
+            <div class="admin-dialog__actions">
+                <button type="button" class="admin-btn admin-btn--ghost" id="confirm-cancel-btn" data-admin-i18n="form.cancel">Cancel</button>
+                <button type="button" class="admin-btn admin-btn--ghost" id="confirm-unpublish-btn" data-admin-i18n="confirm.unpublishInstead">Unpublish instead</button>
+                <button type="button" class="admin-btn admin-btn--danger" id="confirm-delete-btn" data-admin-i18n="confirm.confirmDelete">Delete permanently</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="/js/admin/admin.js"></script>
+</body>
+</html>
