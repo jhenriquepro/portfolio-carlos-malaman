@@ -1,0 +1,96 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    // Autorização exclusivamente por UID provisionado manualmente em admins/{uid}.
+    // Clientes nunca podem escrever na coleção admins.
+    function isAdmin() {
+      return isSignedIn()
+        && exists(/databases/$(database)/documents/admins/$(request.auth.uid));
+    }
+
+    function isAllowedVideoSourceUrl(val) {
+      return val is string
+        && val.size() >= 18
+        && val.size() <= 500
+        && val.matches('^https://((www\\.|m\\.)?youtube\\.com|(www\\.)?youtube-nocookie\\.com|youtu\\.be|(www\\.|m\\.)?instagram\\.com|(www\\.|m\\.)?tiktok\\.com)/[^<>\\s]+$');
+    }
+
+    function isAllowedThumbUrl(val) {
+      return val is string
+        && val.size() >= 20
+        && val.size() <= 500
+        && val.matches('^https://(i\\.ytimg\\.com|img\\.youtube\\.com)/[^<>\\s]+$');
+    }
+
+    function isValidVideo(data) {
+      return data.keys().hasOnly([
+          'type',
+          'platform',
+          'sourceUrl',
+          'externalId',
+          'title',
+          'fullTitle',
+          'badge',
+          'durationSeconds',
+          'tools',
+          'featured',
+          'sortOrder',
+          'published',
+          'startSeconds',
+          'thumbnailUrl',
+          'createdAt',
+          'updatedAt'
+        ])
+        && data.type in ['portfolio', 'short']
+        && data.platform in ['youtube', 'instagram', 'tiktok']
+        && isAllowedVideoSourceUrl(data.sourceUrl)
+        && data.externalId is string
+        && data.externalId.size() >= 5
+        && data.externalId.size() <= 64
+        && !data.externalId.matches('.*[<>\\s].*')
+        && data.title is string
+        && data.title.size() >= 1
+        && data.title.size() <= 120
+        && (!('fullTitle' in data) || (data.fullTitle is string && data.fullTitle.size() <= 180))
+        && (!('badge' in data) || (data.badge is string && data.badge.size() <= 30))
+        && (data.durationSeconds == null || (data.durationSeconds is int && data.durationSeconds >= 0 && data.durationSeconds <= 86400))
+        && data.startSeconds is int
+        && data.startSeconds >= 0
+        && data.startSeconds <= 86400
+        && data.tools is list
+        && data.tools.size() <= 8
+        && data.featured is bool
+        && data.published is bool
+        && data.sortOrder is int
+        && data.sortOrder >= 0
+        && data.sortOrder <= 9999
+        && (data.thumbnailUrl == null || isAllowedThumbUrl(data.thumbnailUrl));
+    }
+
+    // Coleção de administradores provisionada manualmente no Console Firebase
+    match /admins/{uid} {
+      allow read: if isSignedIn() && request.auth.uid == uid;
+      allow write: if false;
+    }
+
+    // Coleção de vídeos do portfólio e Shorts
+    match /videos/{videoId} {
+      // Público lê somente publicados; admin lê inclusive rascunhos
+      allow read: if resource.data.published == true || isAdmin();
+      allow create: if isAdmin() && isValidVideo(request.resource.data);
+      allow update: if isAdmin() && isValidVideo(request.resource.data);
+      allow delete: if isAdmin();
+    }
+
+    // Negar qualquer outra coleção por padrão
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}
