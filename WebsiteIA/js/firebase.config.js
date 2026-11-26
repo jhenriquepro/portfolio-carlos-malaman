@@ -12,12 +12,13 @@
 export const FIREBASE_SDK_VERSION = '11.6.0';
 
 export const FIREBASE_CONFIG = Object.freeze({
-    apiKey: '',
-    authDomain: '',
-    projectId: '',
-    storageBucket: '',
-    messagingSenderId: '',
-    appId: '',
+    apiKey: "AIzaSyC5TU5UeetAPaAG09vr6SEWViZXb4hkm20",
+    authDomain: "malaman-portfolio.firebaseapp.com",
+    projectId: "malaman-portfolio",
+    storageBucket: "malaman-portfolio.firebasestorage.app",
+    messagingSenderId: "966933440927",
+    appId: "1:966933440927:web:fe8131217c3be60abc35aa",
+    measurementId: "G-FC2L0RPG1J"
 });
 
 /**
