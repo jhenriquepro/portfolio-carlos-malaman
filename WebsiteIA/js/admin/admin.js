@@ -346,11 +346,14 @@ function renderVideosList() {
         btnUp.disabled = posInType <= 0;
         btnUp.addEventListener('click', async () => {
             if (posInType <= 0) return;
+            btnUp.disabled = true;
             try {
-                await swapVideosOrderAdmin(video, siblings[posInType - 1]);
+                await swapVideosOrderAdmin(siblings, posInType, posInType - 1);
                 showToast(isPt ? 'Ordem atualizada.' : 'Order updated.');
             } catch {
                 showToast(isPt ? 'Erro ao reordenar.' : 'Failed to reorder.', 'error');
+            } finally {
+                btnUp.disabled = false;
             }
         });
 
@@ -363,11 +366,14 @@ function renderVideosList() {
         btnDown.disabled = posInType < 0 || posInType >= siblings.length - 1;
         btnDown.addEventListener('click', async () => {
             if (posInType < 0 || posInType >= siblings.length - 1) return;
+            btnDown.disabled = true;
             try {
-                await swapVideosOrderAdmin(video, siblings[posInType + 1]);
+                await swapVideosOrderAdmin(siblings, posInType, posInType + 1);
                 showToast(isPt ? 'Ordem atualizada.' : 'Order updated.');
             } catch {
                 showToast(isPt ? 'Erro ao reordenar.' : 'Failed to reorder.', 'error');
+            } finally {
+                btnDown.disabled = false;
             }
         });
 
@@ -378,11 +384,14 @@ function renderVideosList() {
         btnFeature.title = isPt ? 'Alternar destaque' : 'Toggle featured';
         btnFeature.setAttribute('aria-label', `${btnFeature.title}: ${video.title}`);
         btnFeature.addEventListener('click', async () => {
+            btnFeature.disabled = true;
             try {
                 await patchVideoFlagsAdmin(video.id, { featured: !video.featured });
                 showToast(isPt ? 'Destaque atualizado.' : 'Featured updated.');
             } catch {
                 showToast(isPt ? 'Erro ao atualizar destaque.' : 'Failed to update featured.', 'error');
+            } finally {
+                btnFeature.disabled = false;
             }
         });
 
@@ -393,6 +402,7 @@ function renderVideosList() {
             ? (isPt ? 'Ocultar' : 'Unpublish')
             : (isPt ? 'Publicar' : 'Publish');
         btnPublish.addEventListener('click', async () => {
+            btnPublish.disabled = true;
             try {
                 await patchVideoFlagsAdmin(video.id, { published: !video.published });
                 showToast(
@@ -402,6 +412,8 @@ function renderVideosList() {
                 );
             } catch {
                 showToast(isPt ? 'Erro ao alterar status.' : 'Failed to update status.', 'error');
+            } finally {
+                btnPublish.disabled = false;
             }
         });
 
@@ -609,7 +621,8 @@ document.addEventListener('DOMContentLoaded', async () => {
                 await createVideoAdmin(payload);
                 showToast(isPt ? 'Vídeo criado com sucesso!' : 'Video created!');
             }
-            formController.resetForm(computeNextOrder(payload.type), payload.type);
+            const nextOrder = Math.max(computeNextOrder(payload.type), (payload.sortOrder || 0) + 1);
+            formController.resetForm(nextOrder, payload.type);
         },
     });
 
@@ -640,4 +653,8 @@ document.addEventListener('DOMContentLoaded', async () => {
         renderSetupMissingFields();
         showView('view-setup');
     }
+});
+
+window.addEventListener('beforeunload', () => {
+    teardownDashboardStream();
 });

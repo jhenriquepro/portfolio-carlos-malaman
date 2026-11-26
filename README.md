@@ -61,11 +61,18 @@ Acesse:
 - Público: `http://127.0.0.1:4173/`
 - Admin: `http://127.0.0.1:4173/admin`
 
-## Executar Smoke Tests Automatizados
+## Executar Testes Automatizados
 
+### 1. Smoke tests públicos, responsividade, performance e `/admin`
 ```bash
 cd WebsiteIA
 node tests/smoke-test.mjs
+```
+
+### 2. Regras do Firestore (32 asserções) + E2E completo de `/admin` e `/` no Firebase Emulator
+(Na raiz do repositório, requer Firebase CLI e Java)
+```bash
+firebase emulators:exec --only auth,firestore --project demo-malaman-test "node WebsiteIA/tests/firebase-emulator-test.mjs"
 ```
 
 ## Documentação Operacional

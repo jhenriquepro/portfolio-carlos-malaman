@@ -30,23 +30,24 @@ Roteiro de validação incremental baseado em `docs/PLANO_IMPLEMENTACAO_MALAMAN.
 - [x] **V2-04 — Responsividade multi-viewport:** sem overflow horizontal em `1440×900`, `1280×800`, `768×1024`, `390×844` e `375×812`.
 - [x] **V2-05 — Painel `/admin` e rotas:** `/admin` e `/admin/` acessíveis com `noindex, nofollow`, estado `Setup Required` funcional sem login simulado, troca EN/PT funcional e bug de especificidade `[hidden]` corrigido e revalidado visualmente.
 - [x] **V2-06 — Smoke tests reproduzíveis:** `node tests/smoke-test.mjs` executando verificações unitárias, segurança de URLs e navegador real Chrome CDP.
-- [ ] **V2-07 — Validação em Firebase real (pendente credenciais externas):** testar login real, negação de UID não autorizado em `admins/{uid}`, publicação/ocultação/reordenação em tempo real, importação idempotente (6+4) e bloqueio de escrita anônima contra o Firestore real após configurar `js/firebase.config.js` e publicar `firestore.rules`.
+- [x] **V2-07A — Validação completa no Firebase Emulator Suite (`auth` + `firestore`):** `firebase emulators:exec --only auth,firestore --project demo-malaman-test "node WebsiteIA/tests/firebase-emulator-test.mjs"` aprovado com **32/32 regras Firestore** (anônimo, usuário não autorizado, admin, bloqueio de escrita em `admins/{uid}`, 9 payloads maliciosos/XSS) + **E2E completo no Chrome** (estado vazio real, erro de senha, bloqueio de UID não autorizado, login admin, importação idempotente 6+4, criação do 7º vídeo, reordenação atômica, reflexo em tempo real em `/`, edição, despublicação ocultando rascunho, exclusão com confirmação e logout).
+- [ ] **V2-07B — Validação em projeto Firebase real (pendente credenciais externas):** repetir o teste rápido de login/regras/publicação contra o projeto Firebase real após o usuário preencher `WebsiteIA/js/firebase.config.js`, publicar `firestore.rules` + `firestore.indexes.json` e criar `admins/{UID}`.
 
 ## Critérios Gerais do Projeto (CA-01 a CA-14)
 
 | ID | Critério | Fase Alvo | Status |
 |---|---|---|---|
 | CA-01 | Home legível em desktop e mobile, sem overflow horizontal | V2 | Validado (1440/1280/768/390/375px) |
-| CA-02 | Carregamento rápido; sem iframes em massa | V2 | Validado (`0` iframes, `load 588ms`) |
+| CA-02 | Carregamento rápido; sem iframes em massa | V2 | Validado (`0` iframes, `load 649ms`) |
 | CA-03 | Autoplay bloqueado / `prefers-reduced-motion` com fallback | V2 | Validado (carrossel + código showreel) |
-| CA-04 | Portfólio com 6 vídeos migrados (suporte a duração/ferramentas/destaque) | V2 | Validado em fallback; migração Firestore pronta |
-| CA-05 | Adicionar 7º vídeo via Admin sem alterar código | Firebase Real | Implementado; pendente projeto Firebase |
-| CA-06 | Publicar/ocultar e reordenar vídeos persistidos | Firebase Real | Implementado; pendente projeto Firebase |
+| CA-04 | Portfólio com 6 vídeos migrados (duração/ferramentas/destaque) | Emulator | Validado no Emulator; pendente projeto real |
+| CA-05 | Adicionar 7º vídeo via Admin sem alterar código | Emulator | Validado no Emulator; pendente projeto real |
+| CA-06 | Publicar/ocultar e reordenar vídeos persistidos | Emulator | Validado no Emulator; pendente projeto real |
 | CA-07 | Short vertical ampliado (mouse, teclado, Escape, foco) | V2 | Validado |
-| CA-08 | Login inválido e usuário não autorizado bloqueados | Firebase Real | Implementado (`admins/{uid}`); pendente teste real |
-| CA-09 | Acesso anônimo ao Firestore restrito a `published == true` | Firebase Real | Regras criadas (`firestore.rules`); pendente teste real |
+| CA-08 | Login inválido e usuário não autorizado bloqueados | Emulator | Validado no Emulator (`admins/{uid}`); pendente projeto real |
+| CA-09 | Acesso anônimo ao Firestore restrito a `published == true` | Emulator | Validado (32/32 regras no Emulator); pendente projeto real |
 | CA-10 | Troca EN/PT consistente e persistida | V2 | Validado (`/` e `/admin`) |
 | CA-11 | Discord, e-mail e YTJobs válidos sem placeholders | V2 | Validado (YTJobs condicional oculto) |
-| CA-12 | `/admin` funcional em acesso direto e refresh | V2 | Validado local + `vercel.json` pronto |
+| CA-12 | `/admin` funcional em acesso direto e refresh | V2 | Validado local/Emulator + `vercel.json` validado |
 | CA-13 | Conteúdo de clientes somente com autorização | V2 | Validado (seção oculta até autorização) |
-| CA-14 | Isolamento entre Preview/Emulator e Produção | Deploy | Suporte Emulator pronto; `main` preservada |
+| CA-14 | Isolamento entre Preview/Emulator e Produção | Homologação | Validado (`main` intacta, Emulator isolado) |

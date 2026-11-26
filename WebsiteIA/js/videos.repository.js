@@ -187,29 +187,36 @@ export async function deleteVideoAdmin(videoId) {
 }
 
 /**
- * Troca atomicamente a ordem (`sortOrder`) de dois vídeos do mesmo tipo.
+ * Troca atomicamente a ordem (`sortOrder`) dentro da lista ordenada de um mesmo tipo,
+ * normalizando `1..N` para evitar empates caso existam valores duplicados de `sortOrder`.
  */
-export async function swapVideosOrderAdmin(videoA, videoB) {
-    if (!videoA?.id || !videoB?.id) return;
+export async function swapVideosOrderAdmin(siblingsInType, indexA, indexB) {
+    if (!Array.isArray(siblingsInType)) return;
+    if (indexA < 0 || indexB < 0 || indexA >= siblingsInType.length || indexB >= siblingsInType.length) return;
+    if (indexA === indexB) return;
+
+    const reordered = [...siblingsInType];
+    [reordered[indexA], reordered[indexB]] = [reordered[indexB], reordered[indexA]];
+
     const { db, firestore } = await getFirestoreContext();
     const { doc, writeBatch, serverTimestamp } = firestore;
 
-    let orderA = Number.isFinite(videoA.sortOrder) ? videoA.sortOrder : 0;
-    let orderB = Number.isFinite(videoB.sortOrder) ? videoB.sortOrder : 0;
-    if (orderA === orderB) {
-        orderB = orderA + 1;
-    }
-
     const batch = writeBatch(db);
-    batch.update(doc(db, COLLECTION_NAME, videoA.id), {
-        sortOrder: orderB,
-        updatedAt: serverTimestamp(),
+    let hasChanges = false;
+    reordered.forEach((video, idx) => {
+        const nextOrder = idx + 1;
+        if (video.sortOrder !== nextOrder) {
+            batch.update(doc(db, COLLECTION_NAME, video.id), {
+                sortOrder: nextOrder,
+                updatedAt: serverTimestamp(),
+            });
+            hasChanges = true;
+        }
     });
-    batch.update(doc(db, COLLECTION_NAME, videoB.id), {
-        sortOrder: orderA,
-        updatedAt: serverTimestamp(),
-    });
-    await batch.commit();
+
+    if (hasChanges) {
+        await batch.commit();
+    }
 }
 
 /**
